@@ -37,8 +37,7 @@ class Venta extends Model
 
         'idsucursal',
 
-        'material',
-        'cmaterial'
+        'n_material'        
 
     ];
     public function detalle_ventas()
