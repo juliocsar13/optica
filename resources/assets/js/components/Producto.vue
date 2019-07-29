@@ -198,7 +198,6 @@
                                           <th>Nombre</th>
                                           <th>Categoría</th>
                                           <th>Precio Venta</th>
-                                          <th>Stock</th>
                                           <th>Descripción</th>
                                           <th>Estado</th>
                                       </tr>
@@ -210,7 +209,6 @@
                                           <td v-text="producto.nombre"></td>
                                           <td v-text="producto.idfamilia"></td>
                                           <td v-text="producto.precio_venta"></td>
-                                          <td v-text="producto.stock"></td>
                                           <td v-text="producto.descripcion"></td>
                                           <td>
                                               <div v-if="producto.condicion">

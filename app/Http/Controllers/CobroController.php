@@ -115,7 +115,7 @@ class CobroController extends Controller
 
 
           $totales = Venta::join('personas','ventas.idcliente','=','personas.id')
-            ->select(DB::raw("SUM(ventas.total) as total"))
+            ->select(DB::raw("SUM(ventas.pendiente) as total"))
             ->where('ventas.pendiente','>','1')
             ->where('ventas.fecha_hora','>=',$dateStart)
             ->where('ventas.fecha_hora','<=',$dateEnd)

@@ -446,14 +446,6 @@
                                             <td colspan="5" align="right"><strong>Pendiente:</strong></td>
                                             <td>S/. {{pendiente=total-adelanto}}</td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Material:</strong></td>
-                                            <td><input type="text" v-model="material"></td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Costo Material:</strong></td>
-                                            <td>S/. <input type="text" v-model="cmaterial"></td>
-                                        </tr>
                                     </tbody>
                                     <tbody v-else>
                                         <tr>
@@ -560,14 +552,8 @@
                                             <td colspan="4" align="right"><strong>Pendiente:</strong></td>
                                             <td>S/. {{pendiente}}</td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Material:</strong></td>
-                                            <td>{{material}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Costo Material:</strong></td>
-                                            <td>S/. {{cmaterial}}</td>
-                                        </tr>
+
+                                        
                                     </tbody>
                                     <tbody v-else>
                                         <tr>
