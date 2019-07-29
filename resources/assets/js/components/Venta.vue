@@ -387,6 +387,7 @@
                                         <tr>
                                             <th>Opciones</th>
                                             <th>Producto</th>
+                                            <th>Descripcion Material</th>
                                             <th>Precio</th>
                                             <th>Cantidad</th>
                                             <th>Descuento</th>
@@ -401,6 +402,9 @@
                                                 </button>
                                             </td>
                                             <td v-text="detalle.producto">
+                                            </td>
+                                            <td>
+                                                <input v-model="n_material" type="text" class="form-control">
                                             </td>
                                             <td>
                                                 <input v-model="detalle.precio" type="number" class="form-control">
@@ -501,6 +505,7 @@
                                     <thead>
                                         <tr>
                                             <th>Producto</th>
+                                            <th>Descripción Material</th>
                                             <th>Precio</th>
                                             <th>Cantidad</th>
                                             <th>Descuento</th>
@@ -510,6 +515,8 @@
                                     <tbody v-if="arrayDetalle.length">
                                         <tr v-for="detalle in arrayDetalle" :key="detalle.id">
                                             <td v-text="detalle.producto">
+                                            </td>
+                                            <td v-text="detalle.n_material">
                                             </td>
                                             <td v-text="detalle.precio">
                                             </td>
@@ -732,8 +739,7 @@
 
                 arraySucursal: [],
 
-                material: '',
-                cmaterial: ''
+                n_material: ''                
             }
         },
         components: {
@@ -897,7 +903,7 @@
                                 precio: me.precio,
                                 descuento: me.descuento,
                                 stock: me.stock,
-                                cmaterial: me.cmaterial
+                                n_material: me.n_material
                             });
                             me.codigo="";
                             me.idproducto=0;
@@ -906,7 +912,7 @@
                             me.precio=0;
                             me.descuento=0;
                             me.stock=0
-                            me.cmaterial=0;
+                            me.n_material=0;
                         }
                     }
 
@@ -980,8 +986,7 @@
                     'forma_pago': this.forma_pago,
                     'adelanto_v': this.adelanto_v,
                     'idsucursal': this.idsucursal,
-                    'material': this.material,
-                    'cmaterial': this.cmaterial
+                    'n_material': this.n_material,                
                 }).then(function (response) {
                     me.listado=1;
                     me.listarVenta(1,'','num_comprobante');
@@ -1010,8 +1015,7 @@
                     me.forma_pago='Efectivo';
                     me.adelanto_v='';
                     me.idsucursal = '';
-                    me.material = '';
-                    me.cmaterial = '';
+                    me.n_material = '';                    
 
                     window.open('http://127.0.0.1:8000/venta/pdf/'+ response.data.id + ',' + '_blank');
 
@@ -1025,12 +1029,12 @@
                 me.errorMostrarMsjVenta =[];
                 var pro;
 
-                me.arrayDetalle.map(function(x){
-                    if (x.cantidad>x.stock) {
-                        pro=x.producto + " con stock insuficiente"
-                        me.errorMostrarMsjVenta.push(pro);
-                    }
-                });
+                //me.arrayDetalle.map(function(x){
+                    //if (x.cantidad>x.stock) {
+                        //pro=x.producto + " con stock insuficiente"
+                        //me.errorMostrarMsjVenta.push(pro);
+                    //}
+                //});
 
                 if (me.idcliente==0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
                 if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Seleccione el comprobante");
@@ -1058,8 +1062,7 @@
                 me.cantidad=0;
                 me.precio=0;
                 me.arrayDetalle=[];
-                me.material='';
-                me.cmaterial='';
+                me.n_material='';                
             },
             ocultarDetalle(){
                 this.listado=1;
@@ -1085,8 +1088,7 @@
                     me.adelanto = arrayVentaT[0]['adelanto'];
                     me.pendiente = arrayVentaT[0]['pendiente'];
                     me.adelanto_v = arrayVentaT[0]['adelanto_v'];
-                    me.material = arrayVenta[0]['material'];
-                    me.cmaterial = arrayVenta[0]['cmaterial'];
+                    me.n_material = arrayVenta[0]['n_material'];                    
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -1110,7 +1112,7 @@
             abrirModal(modelo, accion, data = []){
                 this.arrayProducto=[];
                 this.modal = 1;
-                this.tituloModal = 'Seleccione uno o varios productos';
+                this.tituloModal = 'Seleccione uno o varios productos y/o materiales';
             },
             desactivarVenta(id){
                swal({

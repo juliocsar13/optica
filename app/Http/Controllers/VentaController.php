@@ -86,7 +86,7 @@ class VentaController extends Controller
         $id = $request->id;
         $detalles = DetalleVenta::join('productos','detalle_ventas.idproducto','=','productos.id')
         ->select('detalle_ventas.cantidad','detalle_ventas.precio','detalle_ventas.descuento',
-        'productos.nombre as producto', 'productos.codigo as codigo', 'productos.descripcion as descripcion')
+        'productos.nombre as producto', 'productos.codigo as codigo', 'productos.descripcion as descripcion', 'detalle_ventas.n_material')
         ->where('detalle_ventas.idventa','=',$id)
         ->orderBy('detalle_ventas.id', 'desc')->get();
 
@@ -324,6 +324,7 @@ class VentaController extends Controller
             $venta->forma_pago = $request->forma_pago;
             $venta->adelanto_v = $request->adelanto_v;
             $venta->idsucursal = $request->idsucursal;
+            $venta->n_material = $request->n_material;            
             $venta->save();
             $detalles = $request->data;
             $flat = 0;
