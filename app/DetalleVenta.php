@@ -12,7 +12,8 @@ class DetalleVenta extends Model
         'idproducto',
         'cantidad',
         'precio',
-        'descuento'
+        'descuento',
+        'n_material'
     ];
     //public $timestamps = false;
     public function venta(){
