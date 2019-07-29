@@ -215,7 +215,6 @@ class ProductoController extends Controller
           $productoDB->codigo = $product['codigo'];
           $productoDB->nombre = $product['nombre'];
           $productoDB->precio_venta = $product['precio_venta'];
-          $productoDB->stock = $product['stock'];
           $productoDB->descripcion = $product['descripcion'];
           $productoDB->condicion = '1';
           $productoDB->idsucursal = $product['idsucursal'];

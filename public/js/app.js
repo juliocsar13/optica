@@ -53543,8 +53543,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -57555,12 +57553,6 @@ var render = function() {
                                     _vm._v(" "),
                                     _c("td", {
                                       domProps: {
-                                        textContent: _vm._s(producto.stock)
-                                      }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("td", {
-                                      domProps: {
                                         textContent: _vm._s(
                                           producto.descripcion
                                         )
@@ -57709,8 +57701,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Categoría")]),
         _vm._v(" "),
         _c("th", [_vm._v("Precio Venta")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Stock")]),
         _vm._v(" "),
         _c("th", [_vm._v("Descripción")]),
         _vm._v(" "),
@@ -66016,20 +66006,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -68429,84 +68405,11 @@ var render = function() {
                                           )
                                         ])
                                       ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "tr",
-                                      {
-                                        staticStyle: {
-                                          "background-color": "#CEECF5"
-                                        }
-                                      },
-                                      [
-                                        _vm._m(11),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _c("input", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.material,
-                                                expression: "material"
-                                              }
-                                            ],
-                                            attrs: { type: "text" },
-                                            domProps: { value: _vm.material },
-                                            on: {
-                                              input: function($event) {
-                                                if ($event.target.composing) {
-                                                  return
-                                                }
-                                                _vm.material =
-                                                  $event.target.value
-                                              }
-                                            }
-                                          })
-                                        ])
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "tr",
-                                      {
-                                        staticStyle: {
-                                          "background-color": "#CEECF5"
-                                        }
-                                      },
-                                      [
-                                        _vm._m(12),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v("S/. "),
-                                          _c("input", {
-                                            directives: [
-                                              {
-                                                name: "model",
-                                                rawName: "v-model",
-                                                value: _vm.cmaterial,
-                                                expression: "cmaterial"
-                                              }
-                                            ],
-                                            attrs: { type: "text" },
-                                            domProps: { value: _vm.cmaterial },
-                                            on: {
-                                              input: function($event) {
-                                                if ($event.target.composing) {
-                                                  return
-                                                }
-                                                _vm.cmaterial =
-                                                  $event.target.value
-                                              }
-                                            }
-                                          })
-                                        ])
-                                      ]
                                     )
                                   ],
                                   2
                                 )
-                              : _c("tbody", [_vm._m(13)])
+                              : _c("tbody", [_vm._m(11)])
                           ]
                         )
                       ])
@@ -68620,7 +68523,7 @@ var render = function() {
                                   "table table-bordered table-striped table-sm"
                               },
                               [
-                                _vm._m(14),
+                                _vm._m(12),
                                 _vm._v(" "),
                                 _vm.arrayDetalle.length
                                   ? _c(
@@ -68684,7 +68587,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(15),
+                                            _vm._m(13),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -68708,7 +68611,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(16),
+                                            _vm._m(14),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -68731,7 +68634,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(17),
+                                            _vm._m(15),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v("S/. " + _vm._s(_vm.total))
@@ -68747,7 +68650,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(18),
+                                            _vm._m(16),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -68765,7 +68668,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(19),
+                                            _vm._m(17),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -68783,7 +68686,7 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._m(20),
+                                            _vm._m(18),
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
@@ -68791,45 +68694,11 @@ var render = function() {
                                               )
                                             ])
                                           ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(21),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(_vm.material))
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(22),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " + _vm._s(_vm.cmaterial)
-                                              )
-                                            ])
-                                          ]
                                         )
                                       ],
                                       2
                                     )
-                                  : _c("tbody", [_vm._m(23)])
+                                  : _c("tbody", [_vm._m(19)])
                               ]
                             )
                           ]
@@ -69032,7 +68901,7 @@ var render = function() {
                           "table table-bordered table-striped table-sm"
                       },
                       [
-                        _vm._m(24),
+                        _vm._m(20),
                         _vm._v(" "),
                         _c(
                           "tbody",
@@ -69291,22 +69160,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Material:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Costo Material:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("tr", [
       _c("td", { attrs: { colspan: "6" } }, [
         _vm._v(
@@ -69379,22 +69232,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Pendiente:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Material:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
-      _c("strong", [_vm._v("Costo Material:")])
     ])
   },
   function() {

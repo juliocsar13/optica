@@ -324,8 +324,6 @@ class VentaController extends Controller
             $venta->forma_pago = $request->forma_pago;
             $venta->adelanto_v = $request->adelanto_v;
             $venta->idsucursal = $request->idsucursal;
-            $venta->material = $request->material;
-            $venta->cmaterial = $request->cmaterial;
             $venta->save();
             $detalles = $request->data;
             $flat = 0;
