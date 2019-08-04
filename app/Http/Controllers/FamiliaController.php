@@ -22,7 +22,7 @@ class FamiliaController extends Controller
 
         if ($buscar==''){
             $familias = Familia::orderBy('id', 'desc')->paginate(10);
-        }    
+        }
         else{
             $familias = Familia::where($criterio, 'like', '%'. $buscar . '%')->orderBy('id', 'desc')->paginate(10);
         }
@@ -37,14 +37,14 @@ class FamiliaController extends Controller
                 'to'            => $familias->lastItem(),
             ],
             'familias' => $familias
-        ];        
+        ];
     }
 
     public function selectFamilia(Request $request){
         if (!$request->ajax()) return redirect('/');
         $familias = Familia::where('condicion','=','1')
         ->select('id','nombre')->orderBy('nombre', 'asc')->get();
-        return ['familias' =>$familias];
+        return ['familias' => $familias];
     }
 
     /**
@@ -53,6 +53,7 @@ class FamiliaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         if (!$request->ajax()) return redirect('/');
@@ -75,12 +76,12 @@ class FamiliaController extends Controller
     {
         if (!$request->ajax()) return redirect('/');
         $familia = Familia::findOrFail($request->id);
-        $familia->nombre = $request->nombre;    
+        $familia->nombre = $request->nombre;
         $familia->descripcion = $request->descripcion;
         $familia->condicion = '1';
         $familia->save();
     }
-    
+
     public function desactivar(Request $request)
     {
         if (!$request->ajax()) return redirect('/');

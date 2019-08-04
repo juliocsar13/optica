@@ -246,31 +246,38 @@
     <div class="row" style="width: 100%; margin-top:130px">
     @endif
   		<div class="col-md-12">
-  			<table class="table " style="width: 400px;" >
+  			<table class="table "   >
   				<tr>
   					<th class="table-cobro" style="border-bottom: 1px solid black"><div class="title" >#</div></th>
             <th class="table-cobro"><div class="title">COMPRAS</div></th>
             <th class="table-cobro"><div class="title">VENTAS</div></th>
+            <th class="table-cobro"><div class="title">MOVIMIENTOS</div></th>
+
             <th class="table-cobro"><div class="title">CAJA</div></th>
   				</tr>
           <tr>
             <th class="table-cobro" style="border-bottom: 1px solid black;text-align:center"><div class="title">EFECTIVO</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos_contado}}.00</div></td>
             <td class="content-td table-content"><div class="subtitle">S/{{$total_cobros_contado}}.00</div></td>
-            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros_contado-$total_ingresos_contado}}.00</div></td>
+            <td class="content-td table-content"><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros_contado-$total_ingresos_contado + $total_movimientos +$caja}}.00</div></td>
 
           </tr>
           <tr>
             <th class="table-cobro" style="border-bottom: 1px solid black;text-align:center"><div class="title">TARJETA</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos_credito}}.00</div></td>
             <td class="content-td table-content" ><div class="subtitle">S/{{$total_cobros_credito}}.00</div></td>
+            <td class="content-td table-content"><div class="subtitle">S/0.00</div></td>
+
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros_credito-$total_ingresos_credito}}.00</div></td>
           </tr>
           <tr>
             <th class="table-cobro" style="border-bottom: 1px solid black"><div class="title">TOTAL</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos}}.00</div></td>
             <td class="content-td table-content" ><div class="subtitle">S/{{$total_cobros}}.00</div></td>
-            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros-$total_ingresos}}.00</div></td>
+            <td class="content-td table-content" ><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+
+            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros-$total_ingresos+$total_movimientos+$caja}}.00</div></td>
 
           </tr>
 

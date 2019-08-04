@@ -7,13 +7,27 @@
     <style media="screen">
       * {
         font-size: 11px;
-      }
-      body {
-        font-size: 11px;
-
         font-family: medium-content-sans-serif-font,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif!important;
+
       }
 
+
+
+      /*border: 1px solid black;*/
+      table {
+        border-top: 1px solid black;
+      border-spacing: 0;
+      border-collapse: collapse;
+  }
+    td {
+      padding: 5px;
+      text-align: center;
+      font-size: 11px;
+  }
+    .ticket {
+        width: 155px;
+        max-width: 155px;
+    }
       td.producto,
       th.producto {
         width: 75px;
@@ -54,10 +68,11 @@
           display: none !important;
         }
       }
+
     </style>
 </head>
 <body class="centrado">
-  <main>
+  <main class="ticket">
     <div class="ticket centrado">
         <div style="text-align:center;margin-left:5px">
 
@@ -70,34 +85,34 @@
             <br>paciente: <span><?php echo e($paciente->paciente); ?></span>
             <br><?php echo date("d/m/Y");?></p>
         </div>
-        <table style="margin-top:-30px" >
+        <table style="margin-top:-30px;font-size: 12px;"    >
           <thead>
             <tr>
-              <th style="font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">CANT.</th>
-              <th style="font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">ARTICULO</th>
+              <th class="cantidad centrado" style="font-size: 12px;border-bottom: 1px dashed black;border-top: 1px solid white">CANT.</th>
+              <th class="producto centrado" style="font-size: 12px;border-bottom: 1px dashed black;border-top: 1px solid white">ARTICULO</th>
             </tr>
           </thead>
           <tbody>
             <?php $__currentLoopData = $ventas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $venta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <tr>
-                <td style="font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;"><?php echo e($venta->cantidad); ?></td>
-                <td style="font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;"><?php echo e($venta->producto); ?></td>
+                <td class="cantidad centrado" ><?php echo e($venta->cantidad); ?></td>
+                <td class="producto centrado"><?php echo e($venta->producto); ?></td>
               </tr>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
+              <tr>
+                <td class="cantidad centrado" style="border-top: 1px dashed black">Total</td>
+                <td class="producto centrado" style="border-top: 1px dashed black">S/<?php echo e($totales->total); ?></td>
+              </tr>
+              <tr>
+                <td class="cantidad centrado">Adelanto</td>
+                <td class="producto centrado">S/<?php echo e($adelanto->adelanto); ?></td>
+              </tr>
+              <tr style="border-bottom: 1px dashed black">
+                <td class=" centrado" style="border-bottom: 1px dashed black">Pendiente</td>
+                <td class=" centrado" style="border-bottom: 1px dashed black">S/<?php echo e($pendiente->pendiente); ?></td>
+              </tr>
           </tbody>
-          <tr class=" centrado" style="margin-top:-10px;border-top: 1px solid black;">
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">Total</td>
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">S/<?php echo e($totales->total); ?></td>
-          </tr>
-          <tr class=" centrado" style="border-top: 2px solid gray; margin-top:-10px">
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">Adelanto</td>
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">S/<?php echo e($adelanto->adelanto); ?></td>
-          </tr>
-          <tr class=" centrado" style="border-top: 2px solid gray; margin-top:-10px">
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">Pendiente</td>
-            <td class=" centrado" style="border-bottom: 1px solid white;font-size:13px;text-align:center;padding:5px;padding: 10px;position: relative;outline: 0;">S/<?php echo e($pendiente->pendiente); ?></td>
-          </tr>
+
         </table>
 
         <div>

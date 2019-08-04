@@ -11,6 +11,7 @@ use Optica\User;
 use Optica\Proveedor;
 use Optica\Persona;
 use Optica\Sucursal;
+use Optica\Caja;
 
 use Optica\Notifications\NotifyAdmin;
 use Illuminate\Support\Facades\Auth;
@@ -143,7 +144,17 @@ class IngresoController extends Controller
             foreach ($allUsers as $notificar) {
                 User::findOrFail($notificar->id)->notify(new NotifyAdmin($arregloDatos));
             }
+            ////////////////////////////////////////////////////////////////////
+            $caja = Caja::select('*')
+              ->where('estado' ,'=', '1')
+              ->where('idsucursal', '=', Auth::user()->idsucursal)
+              ->get();
 
+            $caja1 = new Caja();
+            $caja1 = Caja::findOrFail($caja[0]->id);
+            $caja1->monto_final =  $caja[0]->monto_final - $request->adelantoI;
+            $caja1->save();
+            ////////////////////////////////////////////////////////////////////
             DB::commit();
         } catch (Exception $e){
             DB::rollBack();

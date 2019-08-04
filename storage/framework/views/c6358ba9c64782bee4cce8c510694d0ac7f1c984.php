@@ -38,13 +38,13 @@
                         </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i> Consulta de Caja</a>
+                        <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-bag"></i>Caja</a>
                         <ul class="nav-dropdown-items">
                             <li @click="menu=14" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-bag"></i> Ingresos</a>
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Caja chica</a>
                             </li>
                             <li @click="menu=15" class="nav-item">
-                                <a class="nav-link" href="#"><i class="icon-bag"></i> Egresos</a>
+                                <a class="nav-link" href="#"><i class="icon-bag"></i> Movimiento I/E</a>
                             </li>
                         </ul>
                     </li>

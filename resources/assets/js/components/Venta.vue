@@ -15,7 +15,7 @@
                     </div>
                     <!-- Listado-->
                     <template v-if="listado==1">
-                    <div class="card-body">
+                      <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
@@ -404,7 +404,7 @@
                                             <td v-text="detalle.producto">
                                             </td>
                                             <td>
-                                                <input v-model="n_material" type="text" class="form-control">
+                                                <input v-model="detalle.n_material" type="text" class="form-control">
                                             </td>
                                             <td>
                                                 <input v-model="detalle.precio" type="number" class="form-control">
@@ -553,7 +553,7 @@
                                             <td>S/. {{pendiente}}</td>
                                         </tr>
 
-                                        
+
                                     </tbody>
                                     <tbody v-else>
                                         <tr>
@@ -739,7 +739,7 @@
 
                 arraySucursal: [],
 
-                n_material: ''                
+                n_material: '-'
             }
         },
         components: {
@@ -781,6 +781,19 @@
             }
         },
         methods : {
+            async verificarAperturaCaja() {
+              const response = await  axios.post('/caja/verificar')
+              if (response.data.result == 0) {
+                swal(
+                  'Caja Error!',
+                  'No hay una caja Aperturada .',
+                  'error'
+                )
+                return 0;
+              } else {
+                return 1;
+              }
+            },
             listarVenta (page,buscar,criterio){
                 let me=this;
                 var url= '/venta?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
@@ -952,76 +965,79 @@
                     console.log(error);
                 });
             },
-            registrarVenta(){
+            async registrarVenta(){
                 if (this.validarVenta()){
                     return;
                 }
 
                 let me = this;
+                let verificar = await this.verificarAperturaCaja();
+                if (verificar == 1) {
+                  axios.post('/venta/registrar',{
+                      'idcliente': this.idcliente,
+                      'tipo_comprobante': this.tipo_comprobante,
+                      'serie_comprobante' : this.serie_comprobante,
+                      'num_comprobante' : this.num_comprobante,
+                      'impuesto' : this.impuesto,
+                      'total' : this.total,
+                      'data': this.arrayDetalle,
+                      'idproveedor': this.idproveedor,
+                      'esfera': this.esfera,
+                      'cilindro': this.cilindro,
+                      'eje': this.eje,
+                      'add': this.add,
+                      'dip': this.dip,
+                      'av': this.av,
+                      'prisma': this.prisma,
+                      'esfera2': this.esfera2,
+                      'cilindro2': this.cilindro2,
+                      'eje2': this.eje2,
+                      'av2': this.av2,
+                      'prisma2': this.prisma2,
+                      'referencia': this.referencia,
+                      'adelanto': this.adelanto,
+                      'pendiente': this.pendiente,
+                      'forma_pago': this.forma_pago,
+                      'adelanto_v': this.adelanto_v,
+                      'idsucursal': this.idsucursal,
+                      'n_material': this.n_material,
+                    }).then(function (response) {
+                      me.listado=1;
+                      me.listarVenta(1,'','num_comprobante');
+                      me.idcliente=0;
+                      me.tipo_comprobante='BOLETA';
+                      me.serie_comprobante='';
+                      me.num_comprobante='';
+                      me.impuesto=0.18;
+                      me.total=0.0;
+                      me.idproducto=0;
+                      me.producto='';
+                      me.cantidad=0;
+                      me.precio=0;
+                      me.stock=0;
+                      me.codigo='';
+                      me.descuento=0;
+                      me.arrayDetalle=[];
+                      me.idproveedor='';
+                      me.esfera=0;
+                      me.cilindro='';
+                      me.prisma='';
+                      me.prisma2='';
+                      me.referencia='';
+                      me.adelanto='';
+                      me.pendiente='';
+                      me.forma_pago='Efectivo';
+                      me.adelanto_v='';
+                      me.idsucursal = '';
+                      me.n_material = '';
 
-                axios.post('/venta/registrar',{
-                    'idcliente': this.idcliente,
-                    'tipo_comprobante': this.tipo_comprobante,
-                    'serie_comprobante' : this.serie_comprobante,
-                    'num_comprobante' : this.num_comprobante,
-                    'impuesto' : this.impuesto,
-                    'total' : this.total,
-                    'data': this.arrayDetalle,
-                    'idproveedor': this.idproveedor,
-                    'esfera': this.esfera,
-                    'cilindro': this.cilindro,
-                    'eje': this.eje,
-                    'add': this.add,
-                    'dip': this.dip,
-                    'av': this.av,
-                    'prisma': this.prisma,
-                    'esfera2': this.esfera2,
-                    'cilindro2': this.cilindro2,
-                    'eje2': this.eje2,
-                    'av2': this.av2,
-                    'prisma2': this.prisma2,
-                    'referencia': this.referencia,
-                    'adelanto': this.adelanto,
-                    'pendiente': this.pendiente,
-                    'forma_pago': this.forma_pago,
-                    'adelanto_v': this.adelanto_v,
-                    'idsucursal': this.idsucursal,
-                    'n_material': this.n_material,                
-                }).then(function (response) {
-                    me.listado=1;
-                    me.listarVenta(1,'','num_comprobante');
-                    me.idcliente=0;
-                    me.tipo_comprobante='BOLETA';
-                    me.serie_comprobante='';
-                    me.num_comprobante='';
-                    me.impuesto=0.18;
-                    me.total=0.0;
-                    me.idproducto=0;
-                    me.producto='';
-                    me.cantidad=0;
-                    me.precio=0;
-                    me.stock=0;
-                    me.codigo='';
-                    me.descuento=0;
-                    me.arrayDetalle=[];
-                    me.idproveedor='';
-                    me.esfera=0;
-                    me.cilindro='';
-                    me.prisma='';
-                    me.prisma2='';
-                    me.referencia='';
-                    me.adelanto='';
-                    me.pendiente='';
-                    me.forma_pago='Efectivo';
-                    me.adelanto_v='';
-                    me.idsucursal = '';
-                    me.n_material = '';                    
+                      //window.open('http://127.0.0.1:8000/venta/pdf/'+ response.data.id + ',' + '_blank');
 
-                    window.open('http://127.0.0.1:8000/venta/pdf/'+ response.data.id + ',' + '_blank');
+                  }).catch(function (error) {
+                      console.log(error);
+                  });
+                }
 
-                }).catch(function (error) {
-                    console.log(error);
-                });
             },
             validarVenta(){
                 let me=this;
@@ -1062,7 +1078,7 @@
                 me.cantidad=0;
                 me.precio=0;
                 me.arrayDetalle=[];
-                me.n_material='';                
+                me.n_material='';
             },
             ocultarDetalle(){
                 this.listado=1;
@@ -1088,7 +1104,7 @@
                     me.adelanto = arrayVentaT[0]['adelanto'];
                     me.pendiente = arrayVentaT[0]['pendiente'];
                     me.adelanto_v = arrayVentaT[0]['adelanto_v'];
-                    me.n_material = arrayVenta[0]['n_material'];                    
+                    me.n_material = arrayVenta[0]['n_material'];
                 })
                 .catch(function (error) {
                     console.log(error);

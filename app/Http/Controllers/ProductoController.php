@@ -57,6 +57,8 @@ class ProductoController extends Controller
             $productos = Producto::join('familias','productos.idfamilia','=','familias.id')
             ->select('productos.id','productos.idfamilia','productos.codigo','productos.nombre','familias.nombre as nombre_familia','productos.precio_venta','productos.stock','productos.descripcion','productos.condicion')
             ->where('productos.idsucursal', '=', Auth::user()->idsucursal)
+            ->where('familias.nombre', '<>', 'materiales')
+
             ->orderBy('productos.id', 'desc')->paginate(10);
         }
         else{
@@ -64,6 +66,8 @@ class ProductoController extends Controller
             ->select('productos.id','productos.idfamilia','productos.codigo','productos.nombre','familias.nombre as nombre_familia','productos.precio_venta','productos.stock','productos.descripcion','productos.condicion')
             ->where('productos.'.$criterio, 'like', '%'. $buscar . '%')
             ->where('productos.idsucursal', '=', Auth::user()->idsucursal)
+            ->where('familias.nombre', '<>', 'materiales')
+
             ->orderBy('productos.id', 'desc')->paginate(10);
         }
 
@@ -80,7 +84,9 @@ class ProductoController extends Controller
         if ($buscar==''){
             $productos = Producto::join('familias','productos.idfamilia','=','familias.id')
             ->select('productos.id','productos.idfamilia','productos.codigo','productos.nombre','familias.nombre as nombre_familia','productos.precio_venta','productos.stock','productos.descripcion','productos.condicion')
-            ->where('productos.stock','>','0')
+            //->where('productos.stock','>','0')
+            //->where('familias.nombre', '<>', 'materiales')
+
             ->where('productos.idsucursal', '=', Auth::user()->idsucursal)
             ->orderBy('productos.id', 'desc')->paginate(10);
         }
@@ -88,7 +94,9 @@ class ProductoController extends Controller
             $productos = Producto::join('familias','productos.idfamilia','=','familias.id')
             ->select('productos.id','productos.idfamilia','productos.codigo','productos.nombre','familias.nombre as nombre_familia','productos.precio_venta','productos.stock','productos.descripcion','productos.condicion')
             ->where('productos.'.$criterio, 'like', '%'. $buscar . '%')
-            ->where('productos.stock','>','0')
+            //->where('productos.stock','>','0')
+            //->where('familias.nombre', '<>', 'materiales')
+
             ->where('productos.idsucursal', '=', Auth::user()->idsucursal)
             ->orderBy('productos.id', 'desc')->paginate(10);
         }

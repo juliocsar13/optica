@@ -22,6 +22,7 @@ class KardexController extends Controller
       ->select('productos.id','productos.idfamilia','productos.codigo','productos.nombre','familias.nombre as nombre_familia',
       'productos.precio_venta','productos.stock','productos.descripcion','productos.condicion')
       ->where('productos.idsucursal', '=', Auth::user()->idsucursal)
+      ->where('familias.nombre', '<>', 'materiales')
       ->orderBy('productos.id', 'desc')->paginate();
       return [
         'productos' => $productos
@@ -161,7 +162,7 @@ class KardexController extends Controller
 
 
       $productos = $detalle_ventas->concat($detalle_ingresos)->sortBy('fecha')->values()->all();
-
+      $count = count($productos);
       foreach ($productos as $key => $value) {
         if ($key == 0 && $value['tipo'] == 'compra') {
           $productos[$key]['t_cantidad'] = $value['i_cantidad'];
@@ -182,22 +183,24 @@ class KardexController extends Controller
         if ($key > 0) {
           if ($productos[$key]['tipo'] == 'compra') {
               $productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad']+$value['i_cantidad'];
-              $productos[$key]['t_precio'] = $value['i_precio'];
-              $productos[$key]['t_total'] = $productos[$key-1]['t_total'] + $value['i_total'];
+              $productos[$key]['t_precio']= ($value['i_precio']+$productos[$key-1]['t_precio'])/2;
+
+              $productos[$key]['t_total'] = $productos[$key]['t_cantidad']*$productos[$key]['t_precio'];
               $productos[$key]['v_cantidad'] = '';
               $productos[$key]['v_precio'] = '';
               $productos[$key]['v_total'] = '';
           } else {
             $productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad'] - $value['v_cantidad'];
-            $productos[$key]['t_precio'] = $value['v_precio'];
-            $productos[$key]['t_total'] = $productos[$key-1]['t_total'] - $value['v_total'];
+            //$productos[$key]['t_precio']= $value['v_precio'];
+
+            $productos[$key]['t_precio'] = ($value['v_precio']+$productos[$key-1]['t_precio'])/2 ;
+            $productos[$key]['t_total'] = $productos[$key]['t_cantidad']*$productos[$key]['t_precio'];
             $productos[$key]['i_cantidad'] = '';
             $productos[$key]['i_precio'] = '';
             $productos[$key]['i_total'] = '';
           }
         }
       }
-      //die($ditc);
       return [
           'productos' => $productos,
           'total_ingreso' => $total_ingreso,
@@ -305,7 +308,7 @@ class KardexController extends Controller
         }
       }
 
-    
+
       $user = Auth::user();
       $cliente = Persona::where('id', '=', $user->id)->get();
       $sucursal= Sucursal::where('id', '=', $user->idsucursal)->get();
@@ -325,71 +328,26 @@ class KardexController extends Controller
       $pdf->setPaper('A4', 'landscape');
       return $pdf->stream();
     }
+}/*
+$productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad']+$value['i_cantidad'];
+$productos[$key]['t_precio']= $value['i_precio'];
+$pila = array();
+$numerador = 0;
+$denominador = 0;
+for ($i=0; $i <= $key; $i++) {
+  array_push($pila, $productos[$i]['t_precio']);
 }
-
-
-/*
-      foreach ($productos as $key => $value) {
-        $detalle_ventas = collect($value['detalle_ventas']);
-        $detalle_ingresos = collect($value['detalle_ingresos']);
-        $productos[$key]['familia'] = Familia::where('id', '=', $value['idfamilia'])->get()[0]->nombre;
-        $productos[$key]['empresa'] = Sucursal::where('id', '=', $value['idsucursal'])->get()[0]->razon_social_s;
-        if (isset($date)) {
-
-          $detalle_ingresos = $detalle_ingresos->where('created_at', $date.' '.'00:00:00');
-          $detalle_ventas = $detalle_ventas->where('created_at', $date.' '.'00:00:00');
-        }
-
-        if (count($detalle_ventas) > 0) {
-          $v_cantidad = 0;
-          $v_total = 0;
-          $total = 0;
-          $count = 0;
-          $v_precio = 0;
-          foreach ($detalle_ventas as $key1 => $value) {
-            $v_cantidad = $v_cantidad + $value['cantidad'];
-            $v_precio = $v_precio + $value['precio'];
-            $total = $value['cantidad']*$value['precio'];
-            $v_total = $v_total + $total;
-            if ($value['precio']>0) {
-              $count = $count +1;
-            }
-          }
-          $productos[$key]['v_cantidad'] = $v_cantidad;
-          $productos[$key]['v_precio'] = $v_precio/$count;
-          $productos[$key]['v_total'] = $v_total;
-        }
-        else {
-          $productos[$key]['v_cantidad'] = 0.00;
-          $productos[$key]['v_precio'] = 0.00;
-          $productos[$key]['v_total'] = 0.00;
-        }
-
-        if (count($detalle_ingresos) > 0) {
-          $i_cantidad = 0;
-          $i_total = 0;
-          $total = 0;
-          $count = 0;
-          $i_precio = 0;
-          foreach ($detalle_ingresos as $key2 => $value) {
-            $i_cantidad = $i_cantidad + $value['cantidad'];
-            //$i_precio = $value['precio'];
-            $i_precio = $i_precio + $value['precio'];
-
-            $total = $value['cantidad']*$value['precio'];
-            $i_total = $i_total + $total;
-            if ($value['precio']>0) {
-              $count = $count +1;
-            }
-          }
-          $productos[$key]['i_cantidad'] = $i_cantidad;
-          $productos[$key]['i_precio'] = $i_precio/$count;
-          $productos[$key]['i_total'] = $i_total;
-        }
-        else {
-          $productos[$key]['i_cantidad'] = 0.00;
-          $productos[$key]['i_precio'] = 0.00;
-          $productos[$key]['i_total'] = 0.00;
-        }
-      }
-*/
+for ($i=1; $i <= $key+1; $i++) {
+  $denominador+=$i;
+}
+$h=0;
+for ($i=0; $i <= $key; $i++) {
+  $h=$h+1;
+  $numerador = $numerador+$pila[$i]*$h;
+}
+$result = $numerador/$denominador;
+$productos[$key]['t_precio'] = number_format($result);
+$productos[$key]['t_total'] = $productos[$key]['t_cantidad']*$productos[$key]['t_precio'];
+$productos[$key]['v_cantidad'] = '';
+$productos[$key]['v_precio'] = '';
+$productos[$key]['v_total'] = '';*/

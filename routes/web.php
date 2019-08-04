@@ -152,6 +152,18 @@ Route::group(['middleware'=>['auth']],function(){
 
         Route::get('/caja/pago/pdf/{id}','PagoController@cajaPago');
         Route::get('/caja/cobro/pdf/{id}','CobroController@cajaCobro');
+        Route::post('/caja/registrar','CajaController@store');
+        Route::get('/movimiento','MovimientoController@index');
+
+        Route::post('/movimiento/registrar','MovimientoController@store');
+
+        Route::put('/caja/desactivar', 'CajaController@desactivar');
+        Route::put('/caja/activar', 'CajaController@activar');
+        Route::post('/caja/verificar', 'CajaController@verificar');
+        Route::post('/caja/verificar/saldo', 'CajaController@saldo');
+
+
+
         Route::get('/cobro/filter','CobroController@cobroFilter');
         Route::get('/pago/filter','PagoController@pagoFilter');
 

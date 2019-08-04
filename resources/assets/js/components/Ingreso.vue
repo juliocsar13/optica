@@ -760,52 +760,82 @@
                     console.log(error);
                 });
             },
-            registrarIngreso(){
+            async registrarIngreso(){
+                let me = this;
                 if (this.validarIngreso()){
                     return;
                 }
+                let verificar = await this.verificarAperturaCaja();
+                let v_saldo = await this.verificarSaldoCaja();
+                if (verificar == 1) {
+                  if (v_saldo == 1) {
+                    axios.post('/ingreso/registrar',{
+                      'idproveedor': this.idproveedor,
+                      'tipo_comprobante': this.tipo_comprobante,
+                      'serie_comprobante' : this.serie_comprobante,
+                      'num_comprobante' : this.num_comprobante,
+                      'impuesto' : this.impuesto,
+                      'total' : this.total,
+                      'data': this.arrayDetalle,
 
-                let me = this;
+                      'adelantoI': this.adelantoI,
+                      'pendienteI': this.pendienteI,
+                      'forma_pagoI': this.forma_pagoI,
 
-                axios.post('/ingreso/registrar',{
-                    'idproveedor': this.idproveedor,
-                    'tipo_comprobante': this.tipo_comprobante,
-                    'serie_comprobante' : this.serie_comprobante,
-                    'num_comprobante' : this.num_comprobante,
-                    'impuesto' : this.impuesto,
-                    'total' : this.total,
-                    'data': this.arrayDetalle,
+                      'idsucursal': this.idsucursal
 
-                    'adelantoI': this.adelantoI,
-                    'pendienteI': this.pendienteI,
-                    'forma_pagoI': this.forma_pagoI,
+                    }).then(function (response) {
+                      me.listado=1;
+                      me.listarIngreso(1,'','num_comprobante');
+                      me.idproveedor=0;
+                      me.tipo_comprobante='BOLETA';
+                      me.serie_comprobante='';
+                      me.num_comprobante='';
+                      me.impuesto=0.18;
+                      me.total=0.0;
+                      me.idproducto=0;
+                      me.producto='';
+                      me.cantidad=0;
+                      me.precio=0;
+                      me.arrayDetalle=[];
 
-                    'idsucursal': this.idsucursal
+                      me.adelantoI='';
+                      me.pendienteI='';
+                      me.forma_pagoI='Contado';
 
-                }).then(function (response) {
-                    me.listado=1;
-                    me.listarIngreso(1,'','num_comprobante');
-                    me.idproveedor=0;
-                    me.tipo_comprobante='BOLETA';
-                    me.serie_comprobante='';
-                    me.num_comprobante='';
-                    me.impuesto=0.18;
-                    me.total=0.0;
-                    me.idproducto=0;
-                    me.producto='';
-                    me.cantidad=0;
-                    me.precio=0;
-                    me.arrayDetalle=[];
+                      me.idsucursal = '';
 
-                    me.adelantoI='';
-                    me.pendienteI='';
-                    me.forma_pagoI='Contado';
-
-                    me.idsucursal = '';
-
-                }).catch(function (error) {
-                    console.log(error);
-                });
+                    }).catch(function (error) {
+                      console.log(error);
+                    });
+                  }
+                }
+            },
+            async verificarAperturaCaja() {
+              const response = await  axios.post('/caja/verificar')
+              if (response.data.result == 0) {
+                swal(
+                  'Caja Error!',
+                  'No hay una caja Aperturada .',
+                  'error'
+                )
+                return 0;
+              } else {
+                return 1;
+              }
+            },
+            async verificarSaldoCaja() {
+              const response = await  axios.post('/caja/verificar/saldo', { saldo: this.adelantoI })
+              if (response.data.result == 1) {
+                swal(
+                  'Caja Error!',
+                  'No hay Ingresos suficientes en Caja.',
+                  'error'
+                )
+                return 0;
+              } else {
+                return 1;
+              }
             },
             validarIngreso(){
                 this.errorIngreso=0;
@@ -923,7 +953,6 @@
                 }
                 })
             },
-
             desactivarPendiente(id){
                swal({
                 title: 'Esta seguro de cancelar el pendiente de este ingreso?',
@@ -963,7 +992,6 @@
                 }
                 })
             },
-
             selectSucursal(search,loading){
                 let me=this;
                 loading(true);

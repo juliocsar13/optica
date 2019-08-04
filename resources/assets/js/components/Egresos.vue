@@ -1,26 +1,23 @@
 <template>
     <main class="main">
-            <!-- Breadcrumb -->
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Escritorio</a></li>
             </ol>
             <div class="container-fluid">
-                <!-- Ejemplo de tabla Listado -->
                 <div class="card">
-
                     <div class="card-header">
                       <i class="fa fa-align-justify" style="margin-top: 8px;"></i> Egresos
-                  
+                      <button type="button" @click="abrirModal()" class="btn btn-secondary">
+                          <i class="icon-plus"></i>&nbsp;Nuevo
+                      </button>
                     </div>
-                    <!-- Listado-->
                     <template v-if="listado==1">
                     <div class="card-body">
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <select style="height:39px;" class="form-control col-md-3" v-model="criterio">
-                                      <!-- <option value="tipo_comprobante">Tipo Comprobante</option>
-                                      <option value="num_comprobante">Número Comprobante</option> -->
+
                                       <option value="updated_at">Fecha-Hora</option>
                                     </select>
                                     <input type="date" v-model="buscar" @keyup.enter="listarIngreso(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
@@ -32,45 +29,34 @@
                             <table class="table table-bordered table-striped table-sm">
                                 <thead>
                                     <tr>
+                                      <th>Opciones</th>
                                         <th>Fecha</th>
-                                        <th>Documento</th>
-                                        <th>Anexo</th>
-                                        <th>Detalle</th>
-                                        <th>Cuenta</th>
-                                        <th>Importe</th>
-                                        <th>Estado</th>
-                                        <th>Caja</th>
-                                        <th>Id</th>
-                                        <th>Opciones</th>
+                                        <th>Usuario</th>
+
+                                        <th>Descripcion</th>
+                                        <th>Monto</th>
+                                        <th>Tipo</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="arrayIngreso.length">
-                                    <tr v-for="ingreso in arrayIngreso" :key="ingreso.id">
-                                        <td v-text="ingreso.updated_at"></td>
-                                        <td v-text="ingreso.tipo_documento + ' ' + ingreso.num_documento"></td>
-                                        <td>Fashion Leans la Molina</td>
-                                        <td v-text="ingreso.tipo_comprobante + ' ' + ingreso.serie_comprobante + '-' + ingreso.num_comprobante"></td>
-                                        <td>Compras</td>
-                                        <td v-text="ingreso.adelantoI"></td>
-                                        <td v-text="ingreso.estado"></td>
-                                        <td>Caja</td>
-                                        <td v-text="ingreso.id"></td>
-                                        <td>
-                                            <button type="button" @click="verIngreso(ingreso.id)" class="btn btn-success btn-sm">
-                                            <i class="icon-eye"></i>
-                                            </button> &nbsp;
-                                            <!-- <template v-if="ingreso.estado=='Registrado'">
-                                                <button type="button" class="btn btn-danger btn-sm" @click="desactivarIngreso(ingreso.id)">
-                                                    <i class="icon-trash"></i>
-                                                </button>
-                                            </template>                         -->
+                                <tbody>
+                                    <tr v-for="movimiento in arrayMovimiento" :key="movimiento.id">
+                                        <td >
+                                          <button type="button" @click="VerMovimiento(movimiento.id)" class="btn btn-warning btn-sm">
+                                            <i class="icon-pencil"></i>
+                                          </button> &nbsp;
+                                        </td>
+                                        <td v-text="movimiento.created_at"></td>
+                                        <td v-text="movimiento.usuario"></td>
+                                        <td v-text="movimiento.descripcion"></td>
+                                        <td v-text="movimiento.monto"></td>
+                                        <td v-if='movimiento.tipo == 0'>
+                                          <div><span class="badge badge-success  ">Ingreso</span></div>
+                                        </td>
+                                        <td v-else>
+                                          <div><span class="badge badge-success">Egreso</span></div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td colspan="5" align="right">Total</td>
-                                        <td>S/. {{total=calcularTotal}}</td>
-                                        <td colspan="5"></td>
-                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -102,8 +88,7 @@
                                         label="nombre"
                                         :options="arrayProveedor"
                                         placeholder="Buscar Proveedores..."
-                                        :onChange="getDatosProveedor"
-                                    >
+                                        :onChange="getDatosProveedor" >
 
                                     </v-select>
                                 </div>
@@ -351,62 +336,94 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group row">
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <select class="form-control col-md-3" v-model="criterioP">
-                                        <option value="nombre">Nombre</option>
-                                        <option value="descripcion">Descripción</option>
-                                        <option value="codigo">Código</option>
-                                        </select>
-                                        <input type="text" v-model="buscarP" @keyup.enter="listarProducto(buscarP,criterioP)" class="form-control" placeholder="Texto a buscar">
-                                        <button type="submit" @click="listarProducto(buscarP,criterioP)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                    </div>
+                          <div class="row">
+
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Persona</label>
+                                <v-select
+                                :on-search="selectCliente"
+                                label="nombre"
+                                :options="arrayCliente"
+                                placeholder="Buscar Clientes..."
+                                :onChange="getDatosCliente">
+                              </v-select>
+                            </div>
+                          </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Descripcion</label>
+                                <input type="text" class="form-control" v-model="descripcion">
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Monto</label>
+                                <input type="number" min='0' class="form-control" v-model="monto">
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Tipo de Movimiento</label>
+                                <select  v-model="movimiento" class="form-control">
+                                  <option value="">Seleccione tipo de movimiento</option>
+                                  <option value="0">Ingreso</option>
+                                  <option value="1">Egreso</option>
+                                </select>
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Opciones</th>
-                                            <th>Código</th>
-                                            <th>Nombre</th>
-                                            <th>Familia</th>
-                                            <th>Precio Venta</th>
-                                            <th>Stock</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="producto in arrayProducto" :key="producto.id">
-                                            <td>
-                                                <button type="button" @click="agregarDetalleModal(producto)" class="btn btn-success btn-sm">
-                                                <i class="icon-check"></i>
-                                                </button>
-                                            </td>
-                                            <td v-text="producto.codigo"></td>
-                                            <td v-text="producto.nombre"></td>
-                                            <td v-text="producto.nombre_familia"></td>
-                                            <td v-text="producto.precio_venta"></td>
-                                            <td v-text="producto.stock"></td>
-                                            <td>
-                                                <div v-if="producto.condicion">
-                                                    <span class="badge badge-success">Activo</span>
-                                                </div>
-                                                <div v-else>
-                                                    <span class="badge badge-danger">Desactivado</span>
-                                                </div>
+                          </div>
 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
-                            <button type="button" v-if="tipoAccion==1" class="btn btn-primary" @click="registrarPersona()">Guardar</button>
-                            <button type="button" v-if="tipoAccion==2" class="btn btn-primary" @click="actualizarPersona()">Actualizar</button>
+                            <button type="button" class="btn btn-primary" @click="registrarMovimiento()">Guardar</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!--Fin del modal-->
+            <!--Inicio del modal agregar/actualizar-->
+            <div class="modal fade" tabindex="-1" :class="{'mostrar' : modalEdit}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog modal-primary modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" v-text="tituloModal"></h4>
+                            <button type="button" class="close" @click="cerrarModal()" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="row">
+
+
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Descripcion</label>
+                                <input type="text" class="form-control" v-model="descripcion">
+                              </div>
+                            </div>
+
+                            <div class="col-md-6">
+                              <div class="form-group">
+                                <label>Tipo de Movimiento</label>
+                                <select  v-model="movimiento" class="form-control">
+                                  <option value="">Seleccione tipo de movimiento</option>
+                                  <option value="0">Ingreso</option>
+                                  <option value="1">Egreso</option>
+                                </select>
+                                </div>
+                            </div>
+                          </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
+                            <button type="button" class="btn btn-primary" @click="EditarMovimiento()">Guardar</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -422,6 +439,8 @@
     export default {
         data (){
             return {
+              arrayCliente: [],
+
                 ingreso_id: 0,
                 idproveedor:0,
                 proveedor:'',
@@ -460,7 +479,13 @@
                 codigo: '',
                 producto: '',
                 precio: 0,
-                cantidad:0
+                cantidad:0,
+                descripcion: '',
+                monto: 0,
+                movimiento: '',
+                arrayMovimiento:[],
+                tipo: '',
+                modalEdit:0,
             }
         },
         components: {
@@ -502,6 +527,82 @@
             }
         },
         methods : {
+            EditarMovimiento(id) {
+              let me = this;
+              let data = {};
+              data.descripcion = me.descripcion;
+              data.movimiento = me.movimiento;
+
+              axios.post('/movimiento/editar', data).then(function (response) {
+                me.modal = 0;
+                me.monto = 0;
+                me.descripcion = 0;
+                me.movimiento = 0;
+                me.idcliente = '';
+                me.listarMovimiento(1);
+              }).catch(function (error) {
+                console.log(error);
+              });
+            },
+            VerMovimiento(id) {
+              this.modalEdit = 1;
+              this.tituloModal = 'Editar movimiento I/E';
+            },
+            async registrarMovimiento() {
+              let me = this;
+              let data = {};
+              data.idpersona = me.idcliente;
+              data.monto = me.monto;
+              data.descripcion = me.descripcion;
+              data.movimiento = me.movimiento;
+              console.log(data);
+              let result = await this.verificarCaja();
+              if (result == 0) {
+
+                swal(
+                  'Caja Error!',
+                  'Tiene que Aperturar una Caja antes de realizar un Ingreso y/o Egreso.',
+                  'error'
+                )
+
+              } else {
+
+                axios.post('/movimiento/registrar', data).then(function (response) {
+                  me.modal = 0;
+                  me.monto = 0;
+                  me.descripcion = 0;
+                  me.movimiento = 0;
+                  me.idcliente = '';
+                  me.listarMovimiento(1);
+                }).catch(function (error) {
+                  console.log(error);
+                });
+              }
+            },
+            abrirModal(modelo, accion, data = []){
+                this.modal = 1;
+                this.tituloModal = 'Crear movimiento I/E';
+            },
+            async verificarCaja() {
+              const response = await  axios.post('/caja/verificar')
+              if (response.data.result == 1) {
+                return 1;
+              } else {
+                return 0;
+              }
+            },
+            listarMovimiento(page){
+              let me=this;
+              var url= '/movimiento?page=' + page;
+              axios.get(url).then(function (response) {
+                  var respuesta= response.data;
+                  me.arrayMovimiento = respuesta.movimientos.data;
+                  me.pagination= respuesta.pagination;
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+            },
             listarIngreso (page,buscar,criterio){
                 let me=this;
                 var url= '/egreso?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
@@ -555,13 +656,32 @@
                     console.log(error);
                 });
             },
+            getDatosCliente(val1){
+                let me = this;
+                me.loading = true;
+                me.idcliente = val1.id;
+            },
+            selectCliente(search,loading){
+                let me=this;
+                loading(true)
 
+                var url= '/cliente/selectCliente?filtro='+search;
+                axios.get(url).then(function (response) {
+                    let respuesta = response.data;
+                    q: search
+                    me.arrayCliente=respuesta.clientes;
+                    loading(false)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
             cambiarPagina(page,buscar,criterio){
                 let me = this;
                 //Actualiza la pagina actual.
                 me.pagination.current_page = page;
                 //Envia la peticion para visualizar la data de esa pagina.
-                me.listarIngreso(page,buscar,criterio);
+                me.listarMovimiento(page);
             },
             encuentra(id){
                 var sw=0;
@@ -741,11 +861,7 @@
                 this.modal=0;
                 this.tituloModal='';
             },
-            abrirModal(modelo, accion, data = []){
-                this.arrayProducto=[];
-                this.modal = 1;
-                this.tituloModal = 'Seleccione uno o varios productos';
-            },
+
             desactivarIngreso(id){
                swal({
                 title: 'Esta seguro de anular este ingreso?',
@@ -787,7 +903,7 @@
             },
         },
         mounted() {
-            this.listarIngreso(1,this.buscar,this.criterio);
+            this.listarMovimiento(1);
         }
     }
 </script>

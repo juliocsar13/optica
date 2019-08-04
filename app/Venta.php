@@ -35,9 +35,8 @@ class Venta extends Model
 
         'adelanto_v',
 
-        'idsucursal',
+        'idsucursal'
 
-        'n_material'        
 
     ];
     public function detalle_ventas()
