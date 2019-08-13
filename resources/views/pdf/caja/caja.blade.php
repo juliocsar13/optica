@@ -9,6 +9,7 @@
           page-break-after: always;
       }
       body{
+        font-size: 14px;
         font-family: medium-content-sans-serif-font,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif!important;
 
       }
@@ -27,12 +28,12 @@
       }
       .content-td {
         padding: 5px;
-        font-size: 14px;
+        font-size: 12px;
         text-align: center;
       }
       .border-th {
         text-align: center;
-        font-size: 10px;
+        font-size: 12px;
         width: 12.5%;
         border-bottom: 0px solid #ddd;
       }
@@ -40,7 +41,7 @@
         padding: 10px;
         line-height: 15px;
         font-family: medium-content-sans-serif-font,"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Geneva,Arial,sans-serif!important;
-        font-size: 15px!important;
+        font-size: 14px!important;
       }
       footer {
            position: fixed;
@@ -69,23 +70,23 @@
        }
        .table-cobro {
          position:relative;
-         height:35px;
+         height:10px;
          text-align:center;
          background-color:#212121;
-         font-size: 14px;
+         font-size: 12px;
          color:white;
        }
        .table-cobro .title {
-         margin-top:5px;
+         margin-top:2px;
        }
        .table-content {
          position:relative;
-         height:35px;
+         height:10px;
          text-align:center;
-         font-size: 14px;
+         font-size: 12px;
        }
        .table-content .subtitle {
-         margin-top: 8px;
+         margin-top: 4px;
          vertical-align:middle;
        }
     </style>
@@ -158,7 +159,7 @@
               <td style="width:60%">
                 <strong class="">
                   <h5>REPORTE DE </h5>
-                  <h4 style="font-weight: bold">CAJA POR DIA</h4>
+                  <h4 style="font-weight: bold">CAJA</h4>
                 </strong>
               </td>
             </tr>
@@ -190,7 +191,7 @@
   				<tr>
   					<th class="table-cobro" style="width:50px"><div class="title">#</div></th>
             <th class="table-cobro" style="width:170px"><div class="title">USUARIO</th>
-            <th class="table-cobro"><div class="title">DESCRIPCION</div></th>
+            <th class="table-cobro"><div class="title">COMPROBANTE</div></th>
             <th class="table-cobro"><div class="title">T.PAGO</div></th>
   					<th class="table-cobro"><div class="title">TOTAL</div></th>
   					<th class="table-cobro"><div class="title">ADELANTO</div></th>
@@ -220,7 +221,7 @@
           <tr>
             <th class="table-cobro" style="width:50px"><div class="title">#</div></th>
             <th class="table-cobro" style="width:170px"><div class="title">USUARIO</div></th>
-            <th class="table-cobro"><div class="title">DESCRIPCION</div></th>
+            <th class="table-cobro"><div class="title">COMPROBANTE</div></th>
             <th class="table-cobro"><div class="title">T.PAGO</div></th>
             <th class="table-cobro"><div class="title">TOTAL</div></th>
             <th class="table-cobro"><div class="title">ADELANTO</div></th>
@@ -240,6 +241,36 @@
         </table>
       </div>
     </div>
+    <div class="row ">
+      <div class="col-md-12" >
+        <div class="">
+          MOVIMIENTOS
+        </div>
+        <table class="table">
+          <tr>
+            <th class="table-cobro" style="width:50px"><div class="title">#</div></th>
+            <th class="table-cobro" style="width:170px"><div class="title">USUARIO</div></th>
+            <th class="table-cobro"><div class="title">DESCRIPCION</div></th>
+            <th class="table-cobro"><div class="title">MONTO</div></th>
+            <th class="table-cobro"><div class="title">TIPO</div></th>
+          </tr>
+          @foreach($movimientos as $key => $movimiento)
+            <tr>
+              <td  class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">{{$key+1}}</div></td>
+              <td  class="content-td table-content" style="border-bottom: 1px solid #ddd;"><div class="subtitle">{{$movimiento->usuario }}</div></td>
+              <td  class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">{{$movimiento->descripcion}}</div></td>
+              <td  class="content-td table-content" style="border-bottom: 1px solid #ddd;"><div class="subtitle">{{$movimiento->monto}}</div></td>
+              <td  class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4">
+                <div class="subtitle">
+                  @if($movimiento->tipo == 0) Ingreso @else Egreso @endif
+                </div>
+              </td>
+            </tr>
+          @endforeach
+        </table>
+      </div>
+    </div>
+
     @if($count < 4 && $count_i < 4)
     <div class="row " style="width: 100%;">
     @else
@@ -252,14 +283,15 @@
             <th class="table-cobro"><div class="title">COMPRAS</div></th>
             <th class="table-cobro"><div class="title">VENTAS</div></th>
             <th class="table-cobro"><div class="title">MOVIMIENTOS</div></th>
-
-            <th class="table-cobro"><div class="title">CAJA</div></th>
+            <th class="table-cobro"><div class="title">APER. CAJA</div></th>
+            <th class="table-cobro"><div class="title">CIERRE CAJA</div></th>
   				</tr>
           <tr>
             <th class="table-cobro" style="border-bottom: 1px solid black;text-align:center"><div class="title">EFECTIVO</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos_contado}}.00</div></td>
             <td class="content-td table-content"><div class="subtitle">S/{{$total_cobros_contado}}.00</div></td>
-            <td class="content-td table-content"><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+            <td class="content-td table-content"><div class="subtitle">S/{{$caja}}.0</div></td>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros_contado-$total_ingresos_contado + $total_movimientos +$caja}}.00</div></td>
 
           </tr>
@@ -267,15 +299,16 @@
             <th class="table-cobro" style="border-bottom: 1px solid black;text-align:center"><div class="title">TARJETA</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos_credito}}.00</div></td>
             <td class="content-td table-content" ><div class="subtitle">S/{{$total_cobros_credito}}.00</div></td>
+            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/0.00</div></td>
             <td class="content-td table-content"><div class="subtitle">S/0.00</div></td>
-
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros_credito-$total_ingresos_credito}}.00</div></td>
           </tr>
           <tr>
             <th class="table-cobro" style="border-bottom: 1px solid black"><div class="title">TOTAL</div></th>
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_ingresos}}.00</div></td>
             <td class="content-td table-content" ><div class="subtitle">S/{{$total_cobros}}.00</div></td>
-            <td class="content-td table-content" ><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+            <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_movimientos}}.00</div></td>
+            <td class="content-td table-content"><div class="subtitle">S/0.00</div></td>
 
             <td class="content-td table-content" style="border-bottom: 1px solid #ddd;background-color:#d4d4d4"><div class="subtitle">S/{{$total_cobros-$total_ingresos+$total_movimientos+$caja}}.00</div></td>
 

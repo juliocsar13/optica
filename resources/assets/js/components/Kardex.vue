@@ -87,7 +87,7 @@
                                   <td style="text-align:center" v-text="producto.serie_comprobante"></td>
                                   <td style="text-align:center" v-text="producto.num_comprobante"></td>
                                   <td style="text-align:center" v-text="producto.i_cantidad"></td>
-                                  <td style="text-align:center" v-text="producto.i_precio"></td>
+                                  <td style="text-align:center">{{producto.i_precio}}</td>
                                   <td style="text-align:center" v-text="producto.i_total"></td>
                                   <td style="text-align:center" v-text="producto.v_cantidad"></td>
                                   <td style="text-align:center" v-text="producto.v_precio"></td>

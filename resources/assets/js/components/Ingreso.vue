@@ -93,6 +93,8 @@
                                         <th>Número Comprobante</th>
                                         <th>Fecha Hora</th>
                                         <th>Total</th>
+
+                                        <th>Adelanto</th>
                                         <th>Impuesto</th>
                                         <th>Estado</th>
                                     </tr>
@@ -124,6 +126,8 @@
                                         <td v-text="ingreso.num_comprobante"></td>
                                         <td v-text="ingreso.created_at"></td>
                                         <td v-text="ingreso.total"></td>
+                                        <td v-text="ingreso.adelantoI"></td>
+
                                         <td v-text="ingreso.impuesto"></td>
                                         <td v-text="ingreso.estado"></td>
                                     </tr>

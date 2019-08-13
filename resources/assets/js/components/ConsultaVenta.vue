@@ -63,7 +63,7 @@
                             <table class="table table-bordered table-striped table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Opciones</th>
+                                        <!--<th>Opciones</th>-->
                                         <th>Usuario</th>
                                         <th>Cliente</th>
                                         <th>Tipo Comprobante</th>
@@ -77,14 +77,14 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="venta in arrayVenta" :key="venta.id">
-                                        <td>
+                                        <!--<td>
                                             <button type="button" @click="verVenta(venta.id)"  title="Ver detalle!" class="btn btn-success btn-sm">
                                             <i class="icon-eye"></i>
                                             </button> &nbsp;
                                             <button type="button" @click="pdfVenta(venta.id, venta.tipo_comprobante)"  title="'+venta.tipo_comprobante+'" class="btn btn-info btn-sm">
                                             <i class="icon-doc"></i>
                                             </button>
-                                        </td>
+                                        </td>-->
                                         <td v-text="venta.usuario"></td>
                                         <td v-text="venta.nombre"></td>
                                         <td v-text="venta.tipo_comprobante"></td>

@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Storage;
 use Optica\Persona;
 use Optica\Movimiento;
 use Optica\Caja;
-
 use Optica\Producto;
 use Optica\Sucursal;
 use Optica\Notifications\NotifyAdmin;
@@ -76,7 +75,7 @@ class VentaController extends Controller
         ->select('ventas.id','ventas.tipo_comprobante','ventas.serie_comprobante',
         'ventas.num_comprobante','ventas.fecha_hora','ventas.impuesto','ventas.total',
         'ventas.estado','personas.nombre','users.usuario',
-        'ventas.adelanto','ventas.pendiente')
+        'ventas.adelanto','ventas.pendiente', 'ventas.tipo')
         ->where('ventas.id','=',$id)
         ->orderBy('ventas.id', 'desc')->take(1)->get();
 
@@ -87,13 +86,15 @@ class VentaController extends Controller
         if (!$request->ajax()) return redirect('/');
 
         $id = $request->id;
+        $venta  = Venta::select('*')->where('id', '=', $id)->get()[0];
+
         $detalles = DetalleVenta::join('productos','detalle_ventas.idproducto','=','productos.id')
         ->select('detalle_ventas.cantidad','detalle_ventas.precio','detalle_ventas.descuento',
         'productos.nombre as producto', 'productos.codigo as codigo', 'productos.descripcion as descripcion', 'detalle_ventas.n_material')
         ->where('detalle_ventas.idventa','=',$id)
         ->orderBy('detalle_ventas.id', 'desc')->get();
 
-        return ['detalles' => $detalles];
+        return ['detalles' => $detalles, 'venta_tipo' => $venta->tipo];
     }
     public function pdf($id, $type)
     {
@@ -260,25 +261,26 @@ class VentaController extends Controller
             ->select('detalle_ventas.cantidad', 'detalle_ventas.precio', 'productos.nombre as producto')
             ->where('detalle_ventas.idventa','=',$id)
             ->orderBy('detalle_ventas.id', 'desc')->get();
-            $sucursal= Sucursal::where('id', '=', Auth::user()->idsucursal)->get();
 
-            $totales = Venta::join('personas','ventas.idcliente','=','personas.id')
-              ->select(DB::raw("SUM(ventas.total) as total"))
-              ->where('ventas.id','=',$id)
-              ->get();
-            $pendiente = Venta::join('personas','ventas.idcliente','=','personas.id')
-              ->select(DB::raw("SUM(ventas.pendiente) as pendiente"))
-              ->where('ventas.id','=',$id)
-              ->get();
-            $adelanto = Venta::join('personas','ventas.idcliente','=','personas.id')
-              ->select(DB::raw("SUM(ventas.adelanto) as adelanto"))
-              ->where('ventas.id','=',$id)
-              ->get();
+          $sucursal= Sucursal::where('id', '=', Auth::user()->idsucursal)->get();
 
-            $paciente = Venta::join('personas','ventas.idcliente','=','personas.id')
-              ->select('personas.nombre as paciente')
-              ->where('ventas.id','=',$id)
-              ->get();
+          $totales = Venta::join('personas','ventas.idcliente','=','personas.id')
+            ->select(DB::raw("SUM(ventas.total) as total"))
+            ->where('ventas.id','=',$id)
+            ->get();
+          $pendiente = Venta::join('personas','ventas.idcliente','=','personas.id')
+            ->select(DB::raw("SUM(ventas.pendiente) as pendiente"))
+            ->where('ventas.id','=',$id)
+            ->get();
+          $adelanto = Venta::join('personas','ventas.idcliente','=','personas.id')
+            ->select(DB::raw("SUM(ventas.adelanto) as adelanto"))
+            ->where('ventas.id','=',$id)
+            ->get();
+
+          $paciente = Venta::join('personas','ventas.idcliente','=','personas.id')
+            ->select('personas.nombre as paciente')
+            ->where('ventas.id','=',$id)
+            ->get();
 
           $pdf = \PDF::loadView('pdf.sales.reportTicket', [ 'ventas' => $detalles,
           'sucursal' =>$sucursal[0],
@@ -337,7 +339,7 @@ class VentaController extends Controller
             $venta->impuesto = $request->impuesto;
             $venta->total = $request->total;
             $venta->estado = 'Registrado';
-
+            $venta->tipo = 0;
             $venta->esfera = $request->esfera;
             $venta->cilindro = $request->cilindro;
             $venta->eje = $request->eje;
@@ -501,15 +503,17 @@ class VentaController extends Controller
                 User::findOrFail($notificar->id)->notify(new NotifyAdmin($arregloDatos));
             }
             ////////////////////////////////////////////////////////////////////
-            $caja = Caja::select('*')
-              ->where('estado' ,'=', '1')
-              ->where('idsucursal', '=', Auth::user()->idsucursal)
-              ->get();
+            if ($request->forma_pagoI == 'Efectivo' && $request->forma_pagoI == 'Otro') {
+              $caja = Caja::select('*')
+                ->where('estado' ,'=', '1')
+                ->where('idsucursal', '=', Auth::user()->idsucursal)
+                ->get();
 
-            $caja1 = new Caja();
-            $caja1 = Caja::findOrFail($caja[0]->id);
-            $caja1->monto_final =  $caja[0]->monto_final + $request->adelanto;
-            $caja1->save();
+              $caja1 = new Caja();
+              $caja1 = Caja::findOrFail($caja[0]->id);
+              $caja1->monto_final =  $caja[0]->monto_final + $request->adelanto;
+              $caja1->save();
+            }
             ////////////////////////////////////////////////////////////////////
             DB::commit();
             return [
@@ -532,20 +536,71 @@ class VentaController extends Controller
         $venta = Venta::findOrFail($request->id);
         //die(json_encode($venta));
 
+        $mytime= Carbon::now('America/Lima');
+
         $caja = Caja::select('*')
           ->where('estado' ,'=', '1')
           ->where('idsucursal', '=', Auth::user()->idsucursal)
           ->get();
-
-        $monto = $venta->total - $venta->adelanto;
-        $caja1 = Caja::findOrFail($caja[0]->id);
-        $caja1->monto_final =   $caja[0]->monto_final + $monto;
-
+        $monto=$venta->total-$venta->adelanto;
+        $caja1=Caja::findOrFail($caja[0]->id);
+        $caja1->monto_final=$caja[0]->monto_final + $monto;
         $caja1->save();
-
-        $venta->adelanto = $venta->pendiente;
         $venta->pendiente = '0.00';
         $venta->save();
+
+        $venta_pago = new Venta();
+        $venta_pago->idcliente = $venta->idcliente;
+        $venta_pago->idusuario = \Auth::user()->id;
+        $venta_pago->tipo_comprobante = $venta->tipo_comprobante;
+        $venta_pago->serie_comprobante = $venta->serie_comprobante;
+        $venta_pago->num_comprobante = $venta->num_comprobante;
+        $venta_pago->fecha_hora = $mytime->toDateString();
+        $venta_pago->impuesto = $venta->impuesto;
+        $venta_pago->estado = 'Registrado';
+        $venta_pago->tipo = 1;
+        $venta_pago->idproveedor = $venta->idproveedor;
+        $venta_pago->referencia = $venta->referencia;
+
+        $venta_pago->esfera = '-';
+        $venta_pago->cilindro = '-';
+        $venta_pago->eje = '-';
+        $venta_pago->add = '-';
+        $venta_pago->dip = '-';
+        $venta_pago->av = '-';
+        $venta_pago->prisma = '-';
+
+        $venta_pago->esfera2 = '-';
+        $venta_pago->cilindro2 = '-';
+        $venta_pago->eje2 = '-';
+        $venta_pago->av2 = '-';
+        $venta_pago->prisma2 = '-';
+
+
+        $venta_pago->puente = '-';
+        $venta_pago->hor = '-';
+        $venta_pago->vert = '-';
+        $venta_pago->diag = '-';
+
+        $venta_pago->color = '-';
+        $venta_pago->efecto = '-';
+        $venta_pago->tono = '-';
+
+        $venta_pago->angulo_pantoscopio = '-';
+        $venta_pago->ang_curvatura = '-';
+        $venta_pago->dist_lectura = '-';
+        $venta_pago->st = '-';
+        $venta_pago->he = '-';
+
+        $venta_pago->total = $venta->total-$venta->adelanto;
+        $venta_pago->adelanto = $venta->adelanto;
+        $venta_pago->pendiente = 0;
+        $venta_pago->forma_pago = $venta->forma_pago;
+        $venta_pago->adelanto_v = $venta->adelanto_v;
+        $venta_pago->idsucursal = $venta->idsucursal;
+        $venta_pago->save();
+
+
         $mytime= Carbon::now('America/Lima');
         $user = Auth::user();
         $sucursal = DB::table('sucursales')->where('id', $user->idsucursal)->get();
@@ -600,8 +655,6 @@ class VentaController extends Controller
                      $sumTotValVenta.'|'.$sumTotVenta.'|'.$sumDescTotal.'|'.$sumOtrosCargos.'|'.
                      $sumTotalAnticipos.'|'.$sumImpVenta.'|'.$udl.'|'.$cusId;
           Storage::disk('local')->put('/public/facture/'.$numDocUsuario.'-'.$tipo.'-'.$ventas->serie_comprobante.'-'.$ventas->num_comprobante.'.cab', $content);
-
-          //Storage::disk('local')->put('facture/'.$numDocUsuario.'-'.$tipo.'-'.$venta->serie_comprobante.'-'.$venta->num_comprobante.'.det', '');
           foreach($detalles as $ep=>$det){
               $codUnidadMedida = 'NIU';
               $ctdUnidadItem = $det['cantidad'];
@@ -665,6 +718,7 @@ class VentaController extends Controller
         ->where('personas.id', 'like', '%'. $client_id . '%')
         ->where('ventas.fecha_hora','>=',$dateStart)
         ->where('ventas.fecha_hora','<=',$dateEnd)
+        ->where('ventas.tipo','=', 0)
         ->where('ventas.idsucursal', '=', Auth::user()->idsucursal)
         ->orderBy('ventas.id', 'desc')->paginate();
 
@@ -696,6 +750,7 @@ class VentaController extends Controller
                   ->where('ventas.idcliente', 'like', '%'. $client_id . '%')
                   ->where('ventas.fecha_hora','>=',$dateStart)
                   ->where('ventas.fecha_hora','<=',$dateEnd)
+                  ->where('ventas.tipo','=', 0)
                   ->where('ventas.idsucursal', '=',Auth::user()->idsucursal)
                   ->get();
 
@@ -724,6 +779,7 @@ class VentaController extends Controller
         ->select(DB::raw("SUM(ventas.total) as total"))
         ->where('ventas.fecha_hora','>=',$dateStart)
         ->where('ventas.fecha_hora','<=',$dateEnd)
+        ->where('ventas.tipo','=', 0)
         ->where('personas.id', 'like', '%'. $client_id . '%')
         ->get();
 
@@ -763,19 +819,22 @@ class VentaController extends Controller
         'ventas.adelanto as adelanto', 'ventas.pendiente as pendiente',
         'ventas.tipo_comprobante as tipo_comprobante', 'ventas.serie_comprobante as serie_comprobante',
         'ventas.num_comprobante as num_comprobante', 'users.usuario as usuario', 'ventas.created_at as created_at' ,'ventas.updated_at as updated_at')
-        ->where('ventas.fecha_hora','>=',$dateStart)
-        ->where('ventas.fecha_hora','<=',$dateEnd)
+        ->where('ventas.updated_at','>=',$dateStart)
+        ->where('ventas.updated_at','<=',$dateEnd)
         ->where('ventas.tipo_comprobante', 'like', '%'. $tipo_comprobante . '%')
         ->where('ventas.idsucursal', '=', Auth::user()->idsucursal)->get();
 
       ///die(json_encode($ventas));
       foreach ($ventas as $key => $value) {
         if ($value['total'] != $value['adelanto']) {
-          if ($value['created_at'] != $value['updated_at']) {
+          if ($value['created_at'] == $value['updated_at']) {
             $ventas[$key]['adelanto'] = $value['total'];
+          } else {
+            $ventas[$key]['adelanto'] = $ventas[$key]['adelanto'];
           }
         }
       }
+
       $movimientos = Movimiento::join('personas', 'movimientos.idpersona', '=', 'personas.id')
                   ->select('movimientos.id', 'personas.nombre as usuario', 'movimientos.descripcion',
                             'movimientos.created_at', 'movimientos.tipo', 'movimientos.created_at',
@@ -846,8 +905,6 @@ class VentaController extends Controller
         ->where('ingresos.tipo_comprobante', 'like', '%'. $tipo_comprobante . '%')
         ->where('ingresos.idsucursal', '=', Auth::user()->idsucursal)->get();
 
-
-
         $venta_total = Venta::join('personas','ventas.idproveedor','=','personas.id')
         ->join('users','ventas.idusuario','=','users.id')
         ->select(DB::raw("SUM(ventas.pendiente) as total"))
@@ -858,11 +915,12 @@ class VentaController extends Controller
 
         $totales = $venta_total[0]->total + $ingreso_total[0]->total;
 
-        $caja = Caja::select('*')
-          ->where('estado' ,'=', '1')
+        $caja = Caja::select(DB::raw("SUM(cajas.monto_inicial) as total"))
+          ->where('cajas.created_at','>=',$dateStart)
+          ->where('cajas.created_at','<=',$dateEnd)
           ->where('idsucursal', '=', Auth::user()->idsucursal)
-          ->get();
-
+          ->get()[0]->total;
+          //die(json_encode($caja));
 
         $collection = collect($venta);
         $collection_i = collect($ingreso);
@@ -879,7 +937,7 @@ class VentaController extends Controller
                                                 'total_cobros' => $total_cobros,
                                                 'totales' => $totales,
                                                 'count' => $count,
-                                                'caja'=> $caja[0]->monto_inicial,
+                                                'caja'=> $caja,
                                                 'movimientos'=> $movimientos,
                                                 'total_movimientos'=> $mov_total,
                                                 'count_i' => $count_i,
@@ -919,6 +977,15 @@ class VentaController extends Controller
         ->where('ventas.tipo_comprobante', 'like', '%'. $tipo . '%')
         ->where('ventas.idsucursal', '=', Auth::user()->idsucursal)->get();
 
+        foreach ($ventas as $key => $value) {
+          if ($value['total'] != $value['adelanto']) {
+            if ($value['created_at'] == $value['updated_at']) {
+              $ventas[$key]['adelanto'] = $value['total'];
+            } else {
+              $ventas[$key]['adelanto'] = $ventas[$key]['adelanto'];
+            }
+          }
+        }
         $ingreso= collect($ingresos);
         $venta= collect($ventas);
 

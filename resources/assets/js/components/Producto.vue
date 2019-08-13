@@ -431,7 +431,7 @@
                     me.listarProducto(1,'','nombre');
                 }).catch(function (error) {
                     console.log(error);
-                });
+                })
             },
             desactivarProducto(id){
                 swal({

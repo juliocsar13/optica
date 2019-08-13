@@ -19,7 +19,7 @@ class Venta extends Model
         'impuesto',
         'total',
         'estado',
-
+        'tipo',
         'esfera','cilindro','eje','add','dip','av','prisma',
         'esfera2','cilindro2','eje2','av2','prisma2',
 

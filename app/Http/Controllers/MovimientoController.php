@@ -32,7 +32,8 @@ class MovimientoController extends Controller
           'movimientos' => $movimientos
       ];
     }
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
       if (!$request->ajax()) return redirect('/');
       $request = $request->all();
       $movimiento = new Movimiento();
@@ -50,16 +51,24 @@ class MovimientoController extends Controller
       $movimiento->idsucursal = Auth::user()->idsucursal;
       $movimiento->save();
 
-      $caja1 = new Caja();
 
+      $caja1 = new Caja();
       $caja1 = Caja::findOrFail($caja[0]->id);
       if ($request['movimiento'] == 0) {
-
         $caja1->monto_final =   $caja[0]->monto_final + $request['monto'];
       } else {
         $caja1->monto_final =   $caja[0]->monto_final - $request['monto'];
-
       }
       $caja1->save();
+    }
+    public function update(Request $request)
+    {
+      if (!$request->ajax()) return redirect('/');
+      $movimiento = new Movimiento();
+      //die(json_encode($request->all()));
+      $movimiento = Movimiento::findOrFail($request->id);
+      $movimiento->descripcion = $request->descripcion;
+
+      $movimiento->save();
     }
 }

@@ -62806,6 +62806,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -64536,6 +64540,12 @@ var render = function() {
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
+                                  textContent: _vm._s(ingreso.adelantoI)
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("td", {
+                                domProps: {
                                   textContent: _vm._s(ingreso.impuesto)
                                 }
                               }),
@@ -65992,6 +66002,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Adelanto")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Impuesto")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
@@ -66265,6 +66277,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//
+//
 //
 //
 //
@@ -67414,7 +67428,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 me.adelanto = arrayVentaT[0]['adelanto'];
                 me.pendiente = arrayVentaT[0]['pendiente'];
                 me.adelanto_v = arrayVentaT[0]['adelanto_v'];
-                me.n_material = arrayVenta[0]['n_material'];
+                me.n_material = arrayVentaT[0]['n_material'];
             }).catch(function (error) {
                 console.log(error);
             });
@@ -67928,7 +67942,7 @@ var render = function() {
                                               "btn btn-danger btn-sm",
                                             attrs: {
                                               type: "button",
-                                              title: "Eliminar"
+                                              title: "desactivar"
                                             },
                                             on: {
                                               click: function($event) {
@@ -69537,185 +69551,177 @@ var render = function() {
                                 _vm.arrayDetalle.length
                                   ? _c(
                                       "tbody",
-                                      [
-                                        _vm._l(_vm.arrayDetalle, function(
-                                          detalle
-                                        ) {
-                                          return _c("tr", { key: detalle.id }, [
-                                            _c("td", {
-                                              domProps: {
-                                                textContent: _vm._s(
-                                                  detalle.producto
-                                                )
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("td", {
-                                              domProps: {
-                                                textContent: _vm._s(
-                                                  detalle.n_material
-                                                )
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("td", {
-                                              domProps: {
-                                                textContent: _vm._s(
-                                                  detalle.precio
-                                                )
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("td", {
-                                              domProps: {
-                                                textContent: _vm._s(
-                                                  detalle.cantidad
-                                                )
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("td", {
-                                              domProps: {
-                                                textContent: _vm._s(
-                                                  detalle.descuento
-                                                )
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "\n                                            " +
-                                                  _vm._s(
-                                                    detalle.precio *
-                                                      detalle.cantidad -
-                                                      detalle.descuento
-                                                  ) +
-                                                  "\n                                        "
+                                      _vm._l(_vm.arrayDetalle, function(
+                                        detalle
+                                      ) {
+                                        return _c("tr", { key: detalle.id }, [
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(
+                                                detalle.producto
                                               )
-                                            ])
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(
+                                                detalle.n_material
+                                              )
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(
+                                                detalle.precio
+                                              )
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(
+                                                detalle.cantidad
+                                              )
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", {
+                                            domProps: {
+                                              textContent: _vm._s(
+                                                detalle.descuento
+                                              )
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c("td", [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(
+                                                  detalle.precio *
+                                                    detalle.cantidad -
+                                                    detalle.descuento
+                                                ) +
+                                                "\n                                        "
+                                            )
                                           ])
-                                        }),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(13),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " +
-                                                  _vm._s(
-                                                    (_vm.totalParcial = (
-                                                      _vm.total -
-                                                      _vm.totalImpuesto
-                                                    ).toFixed(2))
-                                                  )
-                                              )
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(14),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " +
-                                                  _vm._s(
-                                                    (_vm.totalImpuesto = (
-                                                      _vm.total * _vm.impuesto
-                                                    ).toFixed(2))
-                                                  )
-                                              )
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(15),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v("S/. " + _vm._s(_vm.total))
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(16),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " + _vm._s(_vm.adelanto)
-                                              )
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(17),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " + _vm._s(_vm.adelanto_v)
-                                              )
-                                            ])
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tr",
-                                          {
-                                            staticStyle: {
-                                              "background-color": "#CEECF5"
-                                            }
-                                          },
-                                          [
-                                            _vm._m(18),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(
-                                                "S/. " + _vm._s(_vm.pendiente)
-                                              )
-                                            ])
-                                          ]
-                                        )
-                                      ],
-                                      2
+                                        ])
+                                      })
                                     )
-                                  : _c("tbody", [_vm._m(19)])
+                                  : _c("tbody", [_vm._m(13)]),
+                                _vm._v(" "),
+                                _c("tbody", [
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(14),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          "S/. " +
+                                            _vm._s(
+                                              (_vm.totalParcial = (
+                                                _vm.total - _vm.totalImpuesto
+                                              ).toFixed(2))
+                                            )
+                                        )
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(15),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v(
+                                          "S/. " +
+                                            _vm._s(
+                                              (_vm.totalImpuesto = (
+                                                _vm.total * _vm.impuesto
+                                              ).toFixed(2))
+                                            )
+                                        )
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(16),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v("S/. " + _vm._s(_vm.total))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(17),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v("S/. " + _vm._s(_vm.adelanto))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(18),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v("S/. " + _vm._s(_vm.adelanto_v))
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "tr",
+                                    {
+                                      staticStyle: {
+                                        "background-color": "#CEECF5"
+                                      }
+                                    },
+                                    [
+                                      _vm._m(19),
+                                      _vm._v(" "),
+                                      _c("td", [
+                                        _vm._v("S/. " + _vm._s(_vm.pendiente))
+                                      ])
+                                    ]
+                                  )
+                                ])
                               ]
                             )
                           ]
@@ -70123,7 +70129,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Descuento")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Subtotal")])
+        _c("th", { staticStyle: { width: "200px" } }, [_vm._v("Subtotal")])
       ])
     ])
   },
@@ -70131,7 +70137,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -70139,7 +70145,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -70147,7 +70153,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -70155,7 +70161,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Adelanto:")])
     ])
   },
@@ -70163,7 +70169,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Adelanto 2 (Solo Referencial):")])
     ])
   },
@@ -70171,7 +70177,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
       _c("strong", [_vm._v("Pendiente:")])
     ])
   },
@@ -70211,7 +70217,23 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("tr", [
+      _c(
+        "td",
+        { staticStyle: { "text-align": "center" }, attrs: { colspan: "6" } },
+        [
+          _vm._v(
+            "\n                                            No hay productos agregados\n                                        "
+          )
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -70219,7 +70241,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -70227,7 +70249,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -70235,7 +70257,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Adelanto:")])
     ])
   },
@@ -70243,7 +70265,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Adelanto 2(Solo Referencial):")])
     ])
   },
@@ -70251,20 +70273,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "5", align: "right" } }, [
       _c("strong", [_vm._v("Pendiente:")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("td", { attrs: { colspan: "5" } }, [
-        _vm._v(
-          "\n                                            No hay productos agregados\n                                        "
-        )
-      ])
     ])
   },
   function() {
@@ -73404,47 +73414,6 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.arrayVenta, function(venta) {
                             return _c("tr", { key: venta.id }, [
-                              _c("td", [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-success btn-sm",
-                                    attrs: {
-                                      type: "button",
-                                      title: "Ver detalle!"
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.verVenta(venta.id)
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "icon-eye" })]
-                                ),
-                                _vm._v(
-                                  "  \n                                        "
-                                ),
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-info btn-sm",
-                                    attrs: {
-                                      type: "button",
-                                      title: "'+venta.tipo_comprobante+'"
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.pdfVenta(
-                                          venta.id,
-                                          venta.tipo_comprobante
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "icon-doc" })]
-                                )
-                              ]),
-                              _vm._v(" "),
                               _c("td", {
                                 domProps: { textContent: _vm._s(venta.usuario) }
                               }),
@@ -73842,8 +73811,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Opciones")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Usuario")]),
         _vm._v(" "),
         _c("th", [_vm._v("Cliente")]),
@@ -75896,10 +75863,9 @@ var render = function() {
                         domProps: { textContent: _vm._s(producto.i_cantidad) }
                       }),
                       _vm._v(" "),
-                      _c("td", {
-                        staticStyle: { "text-align": "center" },
-                        domProps: { textContent: _vm._s(producto.i_precio) }
-                      }),
+                      _c("td", { staticStyle: { "text-align": "center" } }, [
+                        _vm._v(_vm._s(producto.i_precio))
+                      ]),
                       _vm._v(" "),
                       _c("td", {
                         staticStyle: { "text-align": "center" },
@@ -78392,17 +78358,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             arrayCliente: [],
-
+            movimientoEdit: '',
+            descripcionEdit: '',
             ingreso_id: 0,
             idproveedor: 0,
             proveedor: '',
@@ -78490,26 +78453,90 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         }
     },
     methods: {
-        EditarMovimiento: function EditarMovimiento(id) {
+        activarMovimiento: function activarMovimiento() {
+            var _this = this;
+
+            console.log(result);
+            if (result == 0) {
+                swal({
+                    title: 'Esta seguro que quiere Activar este Movimiento?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar!',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    reverseButtons: true
+                }).then(function (result) {
+                    if (result.value) {
+                        var me = _this;
+
+                        axios.put('/movimiento/activar', {
+                            'id': id
+                        }).then(function (response) {
+                            me.listarMovimiento(1, '', 'nombre');
+                            swal('Movimiento Activado!', 'La Accion a sido realizada con éxito.', 'success');
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                    } else if (result.dismiss === swal.DismissReason.cancel) {}
+                });
+            }
+        },
+        desactivarMovimiento: function desactivarMovimiento() {
+            var _this2 = this;
+
+            swal({
+                title: 'Esta seguro que quiere Anular movimiento?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                buttonsStyling: false,
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.value) {
+                    var me = _this2;
+
+                    axios.put('/movimiento/desactivar', {
+                        'id': id
+                    }).then(function (response) {
+                        me.listarCaja(1);
+                        swal('Movimiento Anulado!', 'El accion a sido realizada con éxito.', 'success');
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else if (result.dismiss === swal.DismissReason.cancel) {}
+            });
+        },
+        EditarMovimiento: function EditarMovimiento() {
             var me = this;
             var data = {};
-            data.descripcion = me.descripcion;
-            data.movimiento = me.movimiento;
-
-            axios.post('/movimiento/editar', data).then(function (response) {
-                me.modal = 0;
-                me.monto = 0;
-                me.descripcion = 0;
-                me.movimiento = 0;
-                me.idcliente = '';
+            data.descripcion = me.descripcionEdit;
+            data.id = me.idMovimiento;
+            console.log(data);
+            axios.post('/movimiento/update', data).then(function (response) {
+                me.modalEdit = 0;
+                me.descripcionEdit = 0;
+                me.idMovimiento = 0;
                 me.listarMovimiento(1);
             }).catch(function (error) {
                 console.log(error);
             });
         },
-        VerMovimiento: function VerMovimiento(id) {
+        VerMovimiento: function VerMovimiento(data) {
             this.modalEdit = 1;
             this.tituloModal = 'Editar movimiento I/E';
+            this.idMovimiento = data.id;
+            this.descripcionEdit = data.descripcion;
+            this.movimientoEdit = data.tipo;
         },
         registrarMovimiento: function () {
             var _ref = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee() {
@@ -78525,11 +78552,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                 data.monto = me.monto;
                                 data.descripcion = me.descripcion;
                                 data.movimiento = me.movimiento;
-                                console.log(data);
-                                _context.next = 9;
+                                _context.next = 8;
                                 return this.verificarCaja();
 
-                            case 9:
+                            case 8:
                                 result = _context.sent;
 
                                 if (result == 0) {
@@ -78549,7 +78575,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                                     });
                                 }
 
-                            case 11:
+                            case 10:
                             case 'end':
                                 return _context.stop();
                         }
@@ -78861,10 +78887,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
         },
         cerrarModal: function cerrarModal() {
             this.modal = 0;
+            this.modalEdit = 0;
+
             this.tituloModal = '';
         },
         desactivarIngreso: function desactivarIngreso(id) {
-            var _this = this;
+            var _this3 = this;
 
             swal({
                 title: 'Esta seguro de anular este ingreso?',
@@ -78880,7 +78908,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
                 reverseButtons: true
             }).then(function (result) {
                 if (result.value) {
-                    var me = _this;
+                    var me = _this3;
 
                     axios.put('/ingreso/desactivar', {
                         'id': id
@@ -79057,24 +79085,72 @@ var render = function() {
                           "tbody",
                           _vm._l(_vm.arrayMovimiento, function(movimiento) {
                             return _c("tr", { key: movimiento.id }, [
-                              _c("td", [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-warning btn-sm",
-                                    attrs: { type: "button" },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.VerMovimiento(movimiento.id)
+                              _c(
+                                "td",
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-warning btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.VerMovimiento(movimiento)
+                                        }
                                       }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "icon-pencil" })]
-                                ),
-                                _vm._v(
-                                  "  \n                                    "
-                                )
-                              ]),
+                                    },
+                                    [_c("i", { staticClass: "icon-pencil" })]
+                                  ),
+                                  _vm._v(
+                                    "  \n                                      "
+                                  ),
+                                  movimiento.estado == 1
+                                    ? [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-danger btn-sm",
+                                            attrs: { type: "button" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.desactivarMovimiento(
+                                                  movimiento.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "icon-trash"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    : [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass: "btn btn-info btn-sm",
+                                            attrs: { type: "button" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.activarMovimiento(
+                                                  movimiento.id
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "icon-check"
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                ],
+                                2
+                              ),
                               _vm._v(" "),
                               _c("td", {
                                 domProps: {
@@ -80367,7 +80443,7 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "row" }, [
-                  _c("div", { staticClass: "col-md-6" }, [
+                  _c("div", { staticClass: "col-md-12" }, [
                     _c("div", { staticClass: "form-group" }, [
                       _c("label", [_vm._v("Descripcion")]),
                       _vm._v(" "),
@@ -80376,71 +80452,22 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.descripcion,
-                            expression: "descripcion"
+                            value: _vm.descripcionEdit,
+                            expression: "descripcionEdit"
                           }
                         ],
                         staticClass: "form-control",
                         attrs: { type: "text" },
-                        domProps: { value: _vm.descripcion },
+                        domProps: { value: _vm.descripcionEdit },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.descripcion = $event.target.value
+                            _vm.descripcionEdit = $event.target.value
                           }
                         }
                       })
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-md-6" }, [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", [_vm._v("Tipo de Movimiento")]),
-                      _vm._v(" "),
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.movimiento,
-                              expression: "movimiento"
-                            }
-                          ],
-                          staticClass: "form-control",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.movimiento = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
-                            }
-                          }
-                        },
-                        [
-                          _c("option", { attrs: { value: "" } }, [
-                            _vm._v("Seleccione tipo de movimiento")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "0" } }, [
-                            _vm._v("Ingreso")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "1" } }, [
-                            _vm._v("Egreso")
-                          ])
-                        ]
-                      )
                     ])
                   ])
                 ])

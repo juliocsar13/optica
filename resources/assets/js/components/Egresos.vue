@@ -41,10 +41,21 @@
                                 <tbody>
                                     <tr v-for="movimiento in arrayMovimiento" :key="movimiento.id">
                                         <td >
-                                          <button type="button" @click="VerMovimiento(movimiento.id)" class="btn btn-warning btn-sm">
+                                          <button type="button" @click="VerMovimiento(movimiento)" class="btn btn-warning btn-sm">
                                             <i class="icon-pencil"></i>
                                           </button> &nbsp;
+                                          <template v-if="movimiento.estado == 1">
+                                              <button type="button" class="btn btn-danger btn-sm" @click="desactivarMovimiento(movimiento.id)">
+                                                  <i class="icon-trash"></i>
+                                              </button>
+                                          </template>
+                                          <template v-else>
+                                              <button type="button" class="btn btn-info btn-sm" @click="activarMovimiento(movimiento.id)">
+                                                  <i class="icon-check"></i>
+                                              </button>
+                                          </template>
                                         </td>
+
                                         <td v-text="movimiento.created_at"></td>
                                         <td v-text="movimiento.usuario"></td>
                                         <td v-text="movimiento.descripcion"></td>
@@ -398,28 +409,13 @@
                         </div>
                         <div class="modal-body">
                           <div class="row">
-
-
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                               <div class="form-group">
                                 <label>Descripcion</label>
-                                <input type="text" class="form-control" v-model="descripcion">
+                                <input type="text" class="form-control" v-model="descripcionEdit"/>
                               </div>
                             </div>
-
-                            <div class="col-md-6">
-                              <div class="form-group">
-                                <label>Tipo de Movimiento</label>
-                                <select  v-model="movimiento" class="form-control">
-                                  <option value="">Seleccione tipo de movimiento</option>
-                                  <option value="0">Ingreso</option>
-                                  <option value="1">Egreso</option>
-                                </select>
-                                </div>
-                            </div>
                           </div>
-
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @click="cerrarModal()">Cerrar</button>
@@ -440,52 +436,53 @@
         data (){
             return {
               arrayCliente: [],
-
-                ingreso_id: 0,
-                idproveedor:0,
-                proveedor:'',
-                nombre : '',
-                tipo_comprobante : 'BOLETA',
-                serie_comprobante : '',
-                num_comprobante : '',
-                impuesto: 0.18,
-                total:0.0,
-                totalImpuesto: 0.0,
-                totalParcial: 0.0,
-                arrayIngreso : [],
-                arrayProveedor: [],
-                arrayDetalle : [],
-                listado:1,
-                modal : 0,
-                tituloModal : '',
-                tipoAccion : 0,
-                errorIngreso : 0,
-                errorMostrarMsjIngreso : [],
-                pagination : {
-                    'total' : 0,
-                    'current_page' : 0,
-                    'per_page' : 0,
-                    'last_page' : 0,
-                    'from' : 0,
-                    'to' : 0,
-                },
-                offset : 3,
-                criterio : 'updated_at',
-                buscar : '' ,
-                criterioP:'nombre',
-                buscarP: '',
-                arrayProducto: [],
-                idproducto: 0,
-                codigo: '',
-                producto: '',
-                precio: 0,
-                cantidad:0,
-                descripcion: '',
-                monto: 0,
-                movimiento: '',
-                arrayMovimiento:[],
-                tipo: '',
-                modalEdit:0,
+              movimientoEdit: '',
+              descripcionEdit: '',
+              ingreso_id: 0,
+              idproveedor: 0,
+              proveedor: '',
+              nombre : '',
+              tipo_comprobante : 'BOLETA',
+              serie_comprobante : '',
+              num_comprobante : '',
+              impuesto: 0.18,
+              total: 0.0,
+              totalImpuesto: 0.0,
+              totalParcial: 0.0,
+              arrayIngreso : [],
+              arrayProveedor: [],
+              arrayDetalle : [],
+              listado: 1,
+              modal : 0,
+              tituloModal : '',
+              tipoAccion : 0,
+              errorIngreso : 0,
+              errorMostrarMsjIngreso : [],
+              pagination : {
+                  'total' : 0,
+                  'current_page' : 0,
+                  'per_page' : 0,
+                  'last_page' : 0,
+                  'from' : 0,
+                  'to' : 0,
+              },
+              offset : 3,
+              criterio : 'updated_at',
+              buscar : '' ,
+              criterioP:'nombre',
+              buscarP: '',
+              arrayProducto: [],
+              idproducto: 0,
+              codigo: '',
+              producto: '',
+              precio: 0,
+              cantidad:0,
+              descripcion: '',
+              monto: 0,
+              movimiento: '',
+              arrayMovimiento:[],
+              tipo: '',
+              modalEdit:0,
             }
         },
         components: {
@@ -527,35 +524,108 @@
             }
         },
         methods : {
-            EditarMovimiento(id) {
+            activarMovimiento() {
+              console.log(result);
+              if (result == 0) {
+                  swal({
+                    title: 'Esta seguro que quiere Activar este Movimiento?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Aceptar!',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonClass: 'btn btn-success',
+                    cancelButtonClass: 'btn btn-danger',
+                    buttonsStyling: false,
+                    reverseButtons: true
+                  }).then((result) => {
+                    if (result.value) {
+                    let me = this;
+
+                    axios.put('/movimiento/activar',{
+                    'id': id
+                    }).then(function (response) {
+                        me.listarMovimiento(1,'','nombre');
+                        swal(
+                          'Movimiento Activado!',
+                          'La Accion a sido realizada con éxito.',
+                          'success'
+                        )
+                      }).catch(function (error) {
+                      console.log(error);
+                    });
+
+                    } else if ( result.dismiss === swal.DismissReason.cancel ) {
+                       }
+                  })
+              }
+            },
+            desactivarMovimiento() {
+              swal({
+              title: 'Esta seguro que quiere Anular movimiento?',
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Aceptar!',
+              cancelButtonText: 'Cancelar',
+              confirmButtonClass: 'btn btn-success',
+              cancelButtonClass: 'btn btn-danger',
+              buttonsStyling: false,
+              reverseButtons: true
+              }).then((result) => {
+              if (result.value) {
+                  let me = this;
+
+                  axios.put('/movimiento/desactivar',{
+                      'id': id
+                  }).then(function (response) {
+                      me.listarCaja(1);
+                      swal(
+                      'Movimiento Anulado!',
+                      'El accion a sido realizada con éxito.',
+                      'success'
+                      )
+                  }).catch(function (error) {
+                      console.log(error);
+                  });
+
+
+              } else if (
+
+                  result.dismiss === swal.DismissReason.cancel
+              ) {  } })
+            },
+            EditarMovimiento() {
               let me = this;
               let data = {};
-              data.descripcion = me.descripcion;
-              data.movimiento = me.movimiento;
-
-              axios.post('/movimiento/editar', data).then(function (response) {
-                me.modal = 0;
-                me.monto = 0;
-                me.descripcion = 0;
-                me.movimiento = 0;
-                me.idcliente = '';
+              data.descripcion = me.descripcionEdit;
+              data.id = me.idMovimiento;
+              console.log(data);
+              axios.post('/movimiento/update', data).then(function (response) {
+                me.modalEdit = 0;
+                me.descripcionEdit = 0;
+                me.idMovimiento = 0;
                 me.listarMovimiento(1);
               }).catch(function (error) {
                 console.log(error);
-              });
+              })
             },
-            VerMovimiento(id) {
+            VerMovimiento(data) {
               this.modalEdit = 1;
               this.tituloModal = 'Editar movimiento I/E';
+              this.idMovimiento = data.id
+              this.descripcionEdit = data.descripcion;
+              this.movimientoEdit = data.tipo;
             },
-            async registrarMovimiento() {
+            async registrarMovimiento()   {
               let me = this;
               let data = {};
               data.idpersona = me.idcliente;
               data.monto = me.monto;
               data.descripcion = me.descripcion;
               data.movimiento = me.movimiento;
-              console.log(data);
               let result = await this.verificarCaja();
               if (result == 0) {
 
@@ -859,9 +929,10 @@
             },
             cerrarModal(){
                 this.modal=0;
+                this.modalEdit=0;
+
                 this.tituloModal='';
             },
-
             desactivarIngreso(id){
                swal({
                 title: 'Esta seguro de anular este ingreso?',

@@ -60,7 +60,7 @@
                                             </button>
                                             </template>
                                             <template v-if="venta.estado=='Registrado'">
-                                                <button type="button" title="Eliminar" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
+                                                <button type="button" title="desactivar" class="btn btn-danger btn-sm" @click="desactivarVenta(venta.id)">
                                                     <i class="icon-trash"></i>
                                                 </button>
                                             </template>
@@ -391,7 +391,7 @@
                                             <th>Precio</th>
                                             <th>Cantidad</th>
                                             <th>Descuento</th>
-                                            <th>Subtotal</th>
+                                            <th style="width:200px">Subtotal</th>
                                         </tr>
                                     </thead>
                                     <tbody v-if="arrayDetalle.length">
@@ -422,28 +422,28 @@
                                             </td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Total Parcial:</strong></td>
+                                            <td colspan="6" align="right"><strong>Total Parcial:</strong></td>
                                             <td>S/. {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Total Impuesto:</strong></td>
+                                            <td colspan="6" align="right"><strong>Total Impuesto:</strong></td>
                                             <!--<td>S/. {{totalImpuesto=(total*impuesto).toFixed(2)}}</td>-->
                                             <td>S/. {{totalImpuesto=((total*impuesto)/(1+impuesto)).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Total Neto:</strong></td>
+                                            <td colspan="6" align="right"><strong>Total Neto:</strong></td>
                                             <td>S/. {{total=calcularTotal}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Adelanto:</strong></td>
-                                            <td>S/. <input type="text" v-model="adelanto"></td>
+                                            <td colspan="6" align="right"><strong>Adelanto:</strong></td>
+                                            <td>S/. <input type="text" v-model="adelanto"/></td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Adelanto 2 (Solo Referencial):</strong></td>
+                                            <td colspan="6" align="right"><strong>Adelanto 2 (Solo Referencial):</strong></td>
                                             <td>S/. <input type="text" v-model="adelanto_v"></td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="5" align="right"><strong>Pendiente:</strong></td>
+                                        <tr style="background-color: #CEECF5;" >
+                                            <td colspan="6" align="right"><strong>Pendiente:</strong></td>
                                             <td>S/. {{pendiente=total-adelanto}}</td>
                                         </tr>
                                     </tbody>
@@ -528,39 +528,42 @@
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
                                         </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                            <td>S/. {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                            <td>S/. {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                            <td>S/. {{total}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Adelanto:</strong></td>
-                                            <td>S/. {{adelanto}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Adelanto 2(Solo Referencial):</strong></td>
-                                            <td>S/. {{adelanto_v}}</td>
-                                        </tr>
-                                        <tr style="background-color: #CEECF5;">
-                                            <td colspan="4" align="right"><strong>Pendiente:</strong></td>
-                                            <td>S/. {{pendiente}}</td>
-                                        </tr>
-
 
                                     </tbody>
                                     <tbody v-else>
                                         <tr>
-                                            <td colspan="5">
+                                            <td colspan="6" style="text-align:center">
                                                 No hay productos agregados
                                             </td>
                                         </tr>
+                                    </tbody>
+                                    <tbody>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Total Parcial:</strong></td>
+                                          <td>S/. {{totalParcial=(total-totalImpuesto).toFixed(2)}}</td>
+                                      </tr>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Total Impuesto:</strong></td>
+                                          <td>S/. {{totalImpuesto=((total*impuesto)).toFixed(2)}}</td>
+                                      </tr>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Total Neto:</strong></td>
+                                          <td>S/. {{total}}</td>
+                                      </tr>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Adelanto:</strong></td>
+                                          <td>S/. {{adelanto}}</td>
+                                      </tr>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Adelanto 2(Solo Referencial):</strong></td>
+                                          <td>S/. {{adelanto_v}}</td>
+                                      </tr>
+                                      <tr style="background-color: #CEECF5;">
+                                          <td colspan="5" align="right"><strong>Pendiente:</strong></td>
+                                          <td>S/. {{pendiente}}</td>
+                                      </tr>
+
+
                                     </tbody>
                                 </table>
                             </div>
@@ -633,7 +636,6 @@
                                                 <div v-else>
                                                     <span class="badge badge-danger">Desactivado</span>
                                                 </div>
-
                                             </td>
                                         </tr>
                                     </tbody>
@@ -908,7 +910,7 @@
                             text: 'No hay stock disponible!',
                             })
                         }
-                        else{
+                        else {
                             me.arrayDetalle.push({
                                 idproducto: me.idproducto,
                                 producto: me.producto,
@@ -1104,7 +1106,7 @@
                     me.adelanto = arrayVentaT[0]['adelanto'];
                     me.pendiente = arrayVentaT[0]['pendiente'];
                     me.adelanto_v = arrayVentaT[0]['adelanto_v'];
-                    me.n_material = arrayVenta[0]['n_material'];
+                    me.n_material = arrayVentaT[0]['n_material'];
                 })
                 .catch(function (error) {
                     console.log(error);

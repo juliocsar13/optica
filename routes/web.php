@@ -156,6 +156,7 @@ Route::group(['middleware'=>['auth']],function(){
         Route::get('/movimiento','MovimientoController@index');
 
         Route::post('/movimiento/registrar','MovimientoController@store');
+        Route::post('/movimiento/update','MovimientoController@update');
 
         Route::put('/caja/desactivar', 'CajaController@desactivar');
         Route::put('/caja/activar', 'CajaController@activar');

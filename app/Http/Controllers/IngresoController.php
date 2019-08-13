@@ -145,15 +145,17 @@ class IngresoController extends Controller
                 User::findOrFail($notificar->id)->notify(new NotifyAdmin($arregloDatos));
             }
             ////////////////////////////////////////////////////////////////////
-            $caja = Caja::select('*')
-              ->where('estado' ,'=', '1')
-              ->where('idsucursal', '=', Auth::user()->idsucursal)
-              ->get();
+            if ($request->forma_pagoI == 'Contado' && $request->forma_pagoI == 'Otro') {
+              $caja = Caja::select('*')
+                ->where('estado' ,'=', '1')
+                ->where('idsucursal', '=', Auth::user()->idsucursal)
+                ->get();
 
-            $caja1 = new Caja();
-            $caja1 = Caja::findOrFail($caja[0]->id);
-            $caja1->monto_final =  $caja[0]->monto_final - $request->adelantoI;
-            $caja1->save();
+              $caja1 = new Caja();
+              $caja1 = Caja::findOrFail($caja[0]->id);
+              $caja1->monto_final =  $caja[0]->monto_final - $request->adelantoI;
+              $caja1->save();
+            }
             ////////////////////////////////////////////////////////////////////
             DB::commit();
         } catch (Exception $e){

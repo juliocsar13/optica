@@ -111,101 +111,117 @@ class KardexController extends Controller
       if ($request['producto'] == 'undefined') {
         $request['producto'] = null;
       }
-
-      $detalle_ingresos = DetalleIngreso::join('ingresos', 'ingresos.id' ,'=', 'detalle_ingresos.idingreso')
-                            ->select('ingresos.created_at as fecha', 'ingresos.num_comprobante', 'ingresos.serie_comprobante',
-                                      'detalle_ingresos.cantidad as i_cantidad', 'detalle_ingresos.precio as i_precio',
-                                      DB::raw('detalle_ingresos.cantidad*detalle_ingresos.precio as i_total'))
-                                      ->where('detalle_ingresos.idproducto', 'like', '%'. $request['producto'] . '%')
-                                      ->where('detalle_ingresos.created_at','>=',$dateStart)
-                                      ->where('detalle_ingresos.created_at','<=',$dateEnd)
-                                      ->groupBy('detalle_ingresos.id')->get();
-
-      foreach ($detalle_ingresos as $key => $value) {
-        $detalle_ingresos[$key]['tipo'] = 'compra';
-      }
-      $total_ingreso = DetalleIngreso::join('ingresos', 'ingresos.id' ,'=', 'detalle_ingresos.idingreso')
-                            ->select(DB::raw('SUM(detalle_ingresos.cantidad*detalle_ingresos.precio) as total'))
-                            ->where('detalle_ingresos.idproducto', 'like', '%'. $request['producto'] . '%')
-                            ->where('detalle_ingresos.created_at','>=',$dateStart)
-                            ->where('detalle_ingresos.created_at','<=',$dateEnd)->get()[0]->total;
-
-      $total_ingreso_cantidad = DetalleIngreso::join('ingresos', 'ingresos.id' ,'=', 'detalle_ingresos.idingreso')
-                                  ->select(DB::raw('SUM(detalle_ingresos.cantidad) as cantidad'))
-                                  ->where('detalle_ingresos.idproducto', 'like', '%'. $request['producto'] . '%')
-                                  ->where('detalle_ingresos.created_at','>=',$dateStart)
-                                  ->where('detalle_ingresos.created_at','<=',$dateEnd)->get()[0]->cantidad;
+      $igv = 1.18;
+      $detalle_ingresos_ = DetalleIngreso::join('ingresos', 'ingresos.id' ,'=', 'detalle_ingresos.idingreso')
+          ->select('ingresos.created_at as fecha', 'ingresos.num_comprobante', 'ingresos.serie_comprobante', 'detalle_ingresos.cantidad as i_cantidad',
+            DB::raw('detalle_ingresos.precio/'.$igv.' as i_precio'), DB::raw('detalle_ingresos.cantidad*(detalle_ingresos.precio/'.$igv.') as i_total'))
+          ->where('detalle_ingresos.idproducto', 'like', '%'. $request['producto'] . '%')
+          ->where('detalle_ingresos.created_at','>=',$dateStart)
+          ->where('detalle_ingresos.created_at','<=',$dateEnd)
+          ->groupBy('detalle_ingresos.id')->get();
 
       $detalle_ventas = DetalleVenta::join('ventas', 'ventas.id' ,'=', 'detalle_ventas.idventa')
-                            ->select('ventas.created_at as fecha', 'ventas.num_comprobante', 'ventas.serie_comprobante',
-                              'detalle_ventas.cantidad as v_cantidad', 'detalle_ventas.precio as v_precio',
-                              DB::raw('detalle_ventas.cantidad*detalle_ventas.precio as v_total'))
-                              ->where('detalle_ventas.idproducto', 'like', '%'. $request['producto'] . '%')
-                              ->where('detalle_ventas.created_at','>=',$dateStart)
-                              ->where('detalle_ventas.created_at','<=',$dateEnd)
-                              ->groupBy('detalle_ventas.id')->get();
+          ->select('ventas.created_at as fecha', 'ventas.num_comprobante', 'ventas.serie_comprobante',
+          'detalle_ventas.cantidad as v_cantidad', DB::raw('(detalle_ventas.precio/'.$igv.') as v_precio'),
+          DB::raw('detalle_ventas.cantidad*(detalle_ventas.precio/'.$igv.') as v_total'))
+          ->where('detalle_ventas.idproducto', 'like', '%'. $request['producto'] . '%')
+          ->where('detalle_ventas.created_at','>=',$dateStart)
+          ->where(DB::raw('LENGTH(detalle_ventas.n_material)'),'=',1)
+          ->where('detalle_ventas.created_at','<=',$dateEnd)
+          ->groupBy('detalle_ventas.id')->get();
 
       foreach ($detalle_ventas as $key => $value) {
         $detalle_ventas[$key]['tipo'] = 'venta';
       }
-      $total_salida = DetalleVenta::join('ventas', 'ventas.id' ,'=', 'detalle_ventas.idventa')
-                        ->select(DB::raw('SUM(detalle_ventas.cantidad*detalle_ventas.precio) as total'))
-                        ->where('detalle_ventas.idproducto', 'like', '%'. $request['producto'] . '%')
-                        ->where('detalle_ventas.created_at','>=',$dateStart)
-                        ->where('detalle_ventas.created_at','<=',$dateEnd)->get()[0]->total;
 
       $total_salida_cantidad = DetalleVenta::join('ventas', 'ventas.id' ,'=', 'detalle_ventas.idventa')
-                                ->select(DB::raw('SUM(detalle_ventas.cantidad) as cantidad'))
-                                ->where('detalle_ventas.idproducto', 'like', '%'. $request['producto'] . '%')
-                                ->where('detalle_ventas.created_at','>=',$dateStart)
-                                ->where('detalle_ventas.created_at','<=',$dateEnd)->get()[0]->cantidad;
+            ->select(DB::raw('SUM(detalle_ventas.cantidad) as cantidad'))
+            ->where('detalle_ventas.idproducto', 'like', '%'. $request['producto'] . '%')
+            ->where('detalle_ventas.created_at','>=',$dateStart)
+            ->where('detalle_ventas.created_at','<=',$dateEnd)->get()[0]->cantidad;
 
+      $total_ingreso_cantidad = DetalleIngreso::join('ingresos', 'ingresos.id' ,'=', 'detalle_ingresos.idingreso')
+            ->select(DB::raw('SUM(detalle_ingresos.cantidad) as cantidad'))
+            ->where('detalle_ingresos.idproducto', 'like', '%'. $request['producto'] . '%')
+            ->where('detalle_ingresos.created_at','>=',$dateStart)
+            ->where('detalle_ingresos.created_at','<=',$dateEnd)->get()[0]->cantidad;
 
+      $result = 0;
+      $t_cantidad = $total_ingreso_cantidad-$total_salida_cantidad;
+      $producto  = Producto::where('id', '=', $request['producto'])->get()[0];
+      $i_precio = $producto->stock-$t_cantidad;
+      $first= [
+        'fecha' => "-",
+        'num_comprobante' => "S/C",
+        'serie_comprobante' => "S/C",
+        'i_cantidad' => (int) $producto->stock-$t_cantidad,
+        'i_precio' => $producto->precio_venta/$igv,
+        'i_total' =>  ($producto->precio_venta/$igv)*$i_precio,
+      ];
+      $detalle_ingresos__ = $detalle_ingresos_->prepend($first);
+      $detalle_ingresos = $detalle_ingresos__->map(function ($object,$key) {
+          $object['tipo'] = 'compra';
+          return $object;
+      });
       $productos = $detalle_ventas->concat($detalle_ingresos)->sortBy('fecha')->values()->all();
-      $count = count($productos);
+      //die(json_encode($productos));
       foreach ($productos as $key => $value) {
-        if ($key == 0 && $value['tipo'] == 'compra') {
+        if ($key == 0) {
+          $productos[$key]['i_cantidad'] = number_format($value['i_cantidad'], 2, '.', '');
+          $productos[$key]['i_precio'] = number_format($value['i_precio'], 2, '.', '');
+          $productos[$key]['i_total'] = number_format($value['i_total'], 2, '.', '');
           $productos[$key]['t_cantidad'] = $value['i_cantidad'];
-          $productos[$key]['t_precio'] = $value['i_precio'];
-          $productos[$key]['t_total'] = $value['i_total'];
+          $productos[$key]['t_precio'] = number_format($value['i_precio'], 2, '.', '');
+          $productos[$key]['t_total'] = number_format($value['i_total'], 2, '.', '');
+
           $productos[$key]['v_cantidad'] = '';
           $productos[$key]['v_precio'] = '';
           $productos[$key]['v_total'] = '';
         }
-        if ($key == 0 && $value['tipo'] == 'venta') {
-          $productos[$key]['t_cantidad'] = $value['v_cantidad'];
-          $productos[$key]['t_precio'] = $value['v_precio'];
-          $productos[$key]['t_total'] = $value['v_total'];
-          $productos[$key]['i_cantidad'] = '';
-          $productos[$key]['i_precio'] = '';
-          $productos[$key]['i_total'] = '';
-        }
         if ($key > 0) {
           if ($productos[$key]['tipo'] == 'compra') {
+              $productos[$key]['i_cantidad'] = number_format($value['i_cantidad'], 2, '.', '');
+              $productos[$key]['i_precio'] = number_format($value['i_precio'], 2, '.', '');
+              $productos[$key]['i_total'] = number_format($value['i_total'], 2, '.', '');
               $productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad']+$value['i_cantidad'];
-              $productos[$key]['t_precio']= ($value['i_precio']+$productos[$key-1]['t_precio'])/2;
+              $productos[$key]['t_total'] = number_format($productos[$key-1]['t_total']+$value['i_total'], 2, '.', '');
+              $productos[$key]['t_precio']= number_format((int) $productos[$key]['t_total']/(int) $productos[$key]['t_cantidad'], 2, '.', '');
+              if (isset($producto[$key+1])) {
+                if ($productos[$key+1]['tipo'] == 'venta') {
+                  $productos[$key+1]['v_precio'] =  number_format($productos[$key]['t_precio'], 2, '.', '');
+                  $productos[$key+1]['v_total'] = number_format($productos[$key+1]['v_precio']*$productos[$key+1]['v_cantidad'], 2, '.', '');
+                }
+              }
 
-              $productos[$key]['t_total'] = $productos[$key]['t_cantidad']*$productos[$key]['t_precio'];
               $productos[$key]['v_cantidad'] = '';
               $productos[$key]['v_precio'] = '';
               $productos[$key]['v_total'] = '';
           } else {
-            $productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad'] - $value['v_cantidad'];
-            //$productos[$key]['t_precio']= $value['v_precio'];
 
-            $productos[$key]['t_precio'] = ($value['v_precio']+$productos[$key-1]['t_precio'])/2 ;
-            $productos[$key]['t_total'] = $productos[$key]['t_cantidad']*$productos[$key]['t_precio'];
+            $productos[$key]['v_cantidad'] = number_format($value['v_cantidad'], 2, '.', '');
+            $productos[$key]['v_precio'] = number_format($value['v_precio'], 2, '.', '');
+            $productos[$key]['v_total'] = number_format($value['v_total'], 2, '.', '');
+
+            $productos[$key]['t_cantidad'] = $productos[$key-1]['t_cantidad'] - $value['v_cantidad'];
+            $productos[$key]['t_total'] =  number_format((int) $productos[$key-1]['t_total']- (int) $value['v_total'], 2, '.', '');
+            $productos[$key]['t_precio'] = number_format($productos[$key]['t_total']/$productos[$key]['t_cantidad'], 2, '.', '');
             $productos[$key]['i_cantidad'] = '';
             $productos[$key]['i_precio'] = '';
             $productos[$key]['i_total'] = '';
           }
         }
       }
+      $data = collect($productos)->filter(function($producto, $key){
+          return $producto['tipo'] == 'venta';
+      });
+      $data1 = collect($productos)->filter(function($producto, $key){
+          return $producto['tipo'] == 'compra';
+      });
       return [
           'productos' => $productos,
-          'total_ingreso' => $total_ingreso,
+          'total_ingreso' => $data1->sum('i_total'),
           'total_ingreso_cantidad' => $total_ingreso_cantidad,
-          'total_salida' => $total_salida,
+          'total_salida' => $data->sum('v_total'),
           'total_salida_cantidad' => $total_salida_cantidad
       ];
     }
